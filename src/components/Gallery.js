@@ -6,13 +6,13 @@ let DEFAULTS = {
 	hlColor: 'darkorange',
 	hlSize: 15,
 };
-class Gallery extends React.Component{
+const Gallery = React.createClass({
 	getInitialState() {
 		return {index: 0};
-	}
+	},
   	handleEnter(i) {
   		this.setState({index: i});
-  	}
+  	},
   	getItemLayout() {
   		let {layout} = this.props;
   		let style;
@@ -38,7 +38,7 @@ class Gallery extends React.Component{
   				}
   		}
   		return this.getOrientation(style);
-  	}
+  	},
   	getOrientation(style) {
   		let {posY} = this.props;
   		switch (posY) {
@@ -64,7 +64,7 @@ class Gallery extends React.Component{
   				};
   		}
   		return style;
-  	}
+  	},
   	buildJewelStyle() {
   		let {jewelSize, jewelHLColor, jewelHLSize} = this.props;
   		let style = {
@@ -73,7 +73,7 @@ class Gallery extends React.Component{
   			hlSize: jewelHLSize ? jewelHLSize : 15
   		};
   		return style;
-  	}
+  	},
   	buildContainerStyle() {
   		let {jewelOverlay} = this.props;
   		let containerStyle = {};
@@ -85,9 +85,9 @@ class Gallery extends React.Component{
   			}
   		}
   		return containerStyle;
-  	}
+  	},
 	render() {
-		let {prize, style, images, jewelSize} = this.props;
+		let {style, images, jewelSize} = this.props;
 		let imageLoc = images[this.state.index];
 		let itemlayout = this.getItemLayout();
 
@@ -106,7 +106,7 @@ class Gallery extends React.Component{
 			let imgLocation = images[i];
 
 			return <div style={itemlayout.jewel} onMouseEnter={this.handleEnter.bind(null, n)} key={i}>
-					<GalleryBox size={jewelStyle.size} hlColor={jewelStyle.hlColor} hlSize={jewelStyle.hlSize} index={this.state.index} place={i} pid={this.props.pid} img={img} />
+					<GalleryBox size={jewelStyle.size} hlColor={jewelStyle.hlColor} hlSize={jewelStyle.hlSize} index={this.state.index} place={i} img={img} />
 					</div>
 		}.bind(this)) : null;
 		let containerStyle = this.buildContainerStyle();
@@ -120,6 +120,6 @@ class Gallery extends React.Component{
 			</div>
 		);
 	}
-};
+});
 
 export default Gallery;

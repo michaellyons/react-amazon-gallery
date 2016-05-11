@@ -1,11 +1,11 @@
 import React from 'react';
 
-class GalleryBox extends React.Component {
+let GalleryBox = React.createClass({
 	getInitialState() {
 		return { };
-	}
+	},
   	buildBox() {
-  		let {img, pid, hlColor, hlSize, size, place, index} = this.props;
+  		let {img, hlColor, hlSize, size, place, index} = this.props;
   		let boxShadow = '0 0 '+hlSize+'px '+hlColor;
   		let border = '1px solid '+hlColor;
   		let imgStyle = {
@@ -21,7 +21,7 @@ class GalleryBox extends React.Component {
 			border: (index === place ? border : '1px solid grey') 
   		};
   		return imgStyle;
-  	}
+  	},
 	render() {
 
 		let boxStyle = this.buildBox();
@@ -31,6 +31,6 @@ class GalleryBox extends React.Component {
 			</div>
 		);
 	}
-};
+});
 
 export default GalleryBox;

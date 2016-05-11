@@ -1,7 +1,7 @@
 import React from 'react';
-import Gallery from 'react-amazon-gallery';
+import { Gallery } from 'react-amazon-gallery';
 
-export default class App extends React.Component {
+var App = React.createClass({
   render() {
   	let imageArray = [
   		'/img/land1.jpg',
@@ -16,4 +16,6 @@ export default class App extends React.Component {
   	</div>
     );
   }
-}
+});
+
+export default App;
