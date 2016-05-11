@@ -6,13 +6,13 @@ let DEFAULTS = {
 	hlColor: 'darkorange',
 	hlSize: 15,
 };
-const Gallery = React.createClass({
+class Gallery extends React.Component{
 	getInitialState() {
 		return {index: 0};
-	},
+	}
   	handleEnter(i) {
   		this.setState({index: i});
-  	},
+  	}
   	getItemLayout() {
   		let {layout} = this.props;
   		let style;
@@ -38,7 +38,7 @@ const Gallery = React.createClass({
   				}
   		}
   		return this.getOrientation(style);
-  	},
+  	}
   	getOrientation(style) {
   		let {posY} = this.props;
   		switch (posY) {
@@ -64,7 +64,7 @@ const Gallery = React.createClass({
   				};
   		}
   		return style;
-  	},
+  	}
   	buildJewelStyle() {
   		let {jewelSize, jewelHLColor, jewelHLSize} = this.props;
   		let style = {
@@ -73,7 +73,7 @@ const Gallery = React.createClass({
   			hlSize: jewelHLSize ? jewelHLSize : 15
   		};
   		return style;
-  	},
+  	}
   	buildContainerStyle() {
   		let {jewelOverlay} = this.props;
   		let containerStyle = {};
@@ -85,7 +85,7 @@ const Gallery = React.createClass({
   			}
   		}
   		return containerStyle;
-  	},
+  	}
 	render() {
 		let {prize, style, images, jewelSize} = this.props;
 		let imageLoc = images[this.state.index];
@@ -120,6 +120,6 @@ const Gallery = React.createClass({
 			</div>
 		);
 	}
-});
+};
 
-module.exports = Gallery;
+export default Gallery;
