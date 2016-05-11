@@ -12,7 +12,7 @@ var App = React.createClass({
   	];
     return (
     <div>
-    	<Gallery images={imageArray} />
+    	<Gallery type='s' images={imageArray} />
   	</div>
     );
   }
