@@ -5,6 +5,7 @@ let DEFAULTS = {
 	jewelSize: 40,
 	hlColor: 'darkorange',
 	hlSize: 15,
+  overlay: false,
 };
 const Gallery = React.createClass({
 	getInitialState() {
@@ -27,13 +28,21 @@ const Gallery = React.createClass({
   				};
   				break;
   			case 'horizontal':
+          style = {
+            mainContainer: {
+              
+            },
+            jewel: {
+              float: 'left'
+            }
+          };
+          break;
   			default:
   				style = {
   					mainContainer: {
   						
   					},
   					jewel: {
-  						float: 'left'
   					}
   				}
   		}
@@ -47,8 +56,7 @@ const Gallery = React.createClass({
   					...style,
   					jewelContainer: {
   						position: 'absolute',
-  						left: 2,
-  						top: 2
+  						top: 0
   					},  					
   				};
   				break;
@@ -58,27 +66,31 @@ const Gallery = React.createClass({
   				...style,
   					jewelContainer: {
   						position: 'absolute',
-  						left: 2,
-  						bottom: 2
+  						bottom: 0
   					}
   				};
   		}
   		return style;
   	},
   	buildJewelStyle() {
-  		let {jewelSize, jewelHLColor, jewelHLSize} = this.props;
+  		let {jewelSize, jewelHLColor, jewelHLSize} = this.props.config;
   		let style = {
-  			size: jewelSize ? jewelSize : 40,
+  			size: jewelSize ? (jewelSize * 80 + 20) : 40,
   			hlColor: jewelHLColor ? jewelHLColor : 'darkorange',
   			hlSize: jewelHLSize ? jewelHLSize : 15
   		};
+      if (config) {
+        style
+      }
   		return style;
   	},
   	buildContainerStyle() {
   		let {jewelOverlay} = this.props;
   		let containerStyle = {};
   		if (jewelOverlay) {
-
+        containerStyle = {
+          padding: '0'
+        }
   		} else {
   			containerStyle = {
   				padding: '0 0 50 0'
@@ -92,7 +104,7 @@ const Gallery = React.createClass({
 		let itemlayout = this.getItemLayout();
 
 		let galleryMain = {
-			height: '450px',
+			height: '100%',
 			width: '100%',
 			backgroundImage: "url('"+imageLoc+"')",
 			backgroundSize: 'contain',
