@@ -1,14 +1,12 @@
 {
-  "name": "react-amazon-gallery",
-  "version": "0.1.2",
+  "name": "react-amazon-gallery-sandbox",
+  "version": "0.1.0",
   "scripts": {
-    "build": "webpack",
-    "start": "webpack-dev-server"
-  },
-  "main" : "./lib",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/michaellyons/react-amazon-gallery.git"
+    "test": "",
+    "start": "node server",
+    "build": "rimraf dist && set NODE_ENV=production && webpack --config ./webpack.production.config.js --progress --profile --colors",
+    "eslint": "eslint .",
+    "jscs": "jscs ."
   },
   "license": "MIT",
   "keywords": [
@@ -24,6 +22,8 @@
     "babel-preset-stage-0": "^6.5.0",
     "css-loader": "^0.23.1",
     "express": "^4.13.4",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "html-webpack-plugin": "^2.16.1",
     "npm-install-webpack-plugin": "^3.1.1",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.0",
@@ -32,8 +32,9 @@
     "webpack-hot-middleware": "^2.10.0",
     "webpack-merge": "^0.12.0"
   },
-  "peerDependencies": {
+  "dependencies": {
     "react": "^15.0.2",
+    "react-amazon-gallery": "^0.1.1",
     "react-dom": "^15.0.2"
   }
 }
