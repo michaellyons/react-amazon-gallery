@@ -4,9 +4,11 @@ import baseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import RaisedButton from 'material-ui/RaisedButton';
 import Slider from 'material-ui/Slider';
+
 const DEFAULT_CONFIG = {
+  containerHeight: 400,
   orientation: 'vertical',
-  overlay: false,
+  overlay: false, 
   posY: 'top',
   jewelSpacing: 0.2,
   jewelSize: 0.25,
@@ -20,11 +22,12 @@ var App = React.createClass({
     }
   },
   childContextTypes: {
-    muiTheme: React.PropTypes.function,
+    muiTheme: React.PropTypes.function
   },
   getChildContext() {
     return {muiTheme: getMuiTheme(baseTheme)};
   },
+
   changeConfig(config, val, e) {
     e.preventDefault();
     let {...newState} = this.state;
@@ -34,6 +37,11 @@ var App = React.createClass({
   handleSlider(slider, value, e) {
     let {...newState} = this.state;
     newState[slider] = e;
+    this.setState(newState);
+  },
+  changeColor(color) {
+    let {...newState} = this.state;
+    newState['hlColor'] = color;
     this.setState(newState);
   },
   render() {
@@ -47,8 +55,8 @@ var App = React.createClass({
   	];
     return (
     <div style={{width: '100%', height: '60%', display: 'flex'}}>
-      <div style={{width: '50%'}}>
-    	 <Gallery layout={orientation} jewelSize={this.state.jewelSize} config={this.state} posY={'top'} images={imageArray} />
+      <div style={{width: '50%', height: '100%'}}>
+    	 <Gallery config={this.state} images={imageArray} />
       </div>
       <div style={{width: '50%', padding: '0 1em'}}>
         <h1>Config</h1>
@@ -68,7 +76,6 @@ var App = React.createClass({
           <Slider defaultValue={this.state.jewelSize} onChange={this.handleSlider.bind(this, 'jewelSize')} />
           <h3>Jewel Spacing</h3>
           <Slider defaultValue={this.state.jewelSpacing} onChange={this.handleSlider.bind(this, 'jewelSpacing')} />
-
       </div>
   	</div>
     );

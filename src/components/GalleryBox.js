@@ -5,7 +5,8 @@ let GalleryBox = React.createClass({
 		return { };
 	},
   	buildBox() {
-  		let {img, hlColor, hlSize, size, place, index} = this.props;
+  		let {img, config, place, orientation, index} = this.props;
+  		let {hlColor, hlSize, spacing, size} = config;
   		let boxShadow = '0 0 '+hlSize+'px '+hlColor;
   		let border = '1px solid '+hlColor;
   		let imgStyle = {
@@ -15,7 +16,7 @@ let GalleryBox = React.createClass({
 			backgroundPosition: 'center',
 			width: size,
 			height: size,
-			margin: '0 4',
+			margin: (orientation === 'horizontal' ? '0 '+spacing : spacing+' 0'),
 			backgroundImage: "url('"+img+"')",
 			boxShadow: (index === place ? boxShadow : 'none'),
 			border: (index === place ? border : '1px solid grey') 

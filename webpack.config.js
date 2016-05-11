@@ -26,19 +26,19 @@ const common = {
     extensions: ['', '.js', '.jsx']
   },
   output: {
-    path: PATHS.lib,
-    libraryTarget: 'umd',
+    path: PATHS.build,
+    // libraryTarget: 'umd',
     filename: 'index.js'
   },
-  externals: {
-    react: {
-      root: 'React',
-      commonjs: 'react',
-      commonjs2: 'react',
-      amd: 'react'
-    },
-  'react-dom': 'react-dom'
-  },
+  // externals: {
+  //   react: {
+  //     root: 'React',
+  //     commonjs: 'react',
+  //     commonjs2: 'react',
+  //     amd: 'react'
+  //   },
+  // 'react-dom': 'react-dom'
+  // },
   module: {
     loaders: [
       {
