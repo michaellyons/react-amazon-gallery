@@ -19,18 +19,19 @@ const common = {
   entry: {
     src: PATHS.src
   },
-
+  output: {
+    path: PATHS.lib,
+    library: 'Gallery',
+    libraryTarget: 'umd',
+    filename: 'index.js'
+  },
   // Add resolve.extensions.
   // '' is needed to allow imports without an extension.
   // Note the .'s before extensions as it will fail to match without!!!
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
-  output: {
-    path: PATHS.lib,
-    // libraryTarget: 'umd',
-    filename: 'index.js'
-  },
+
   module: {
     loaders: [
       {
@@ -88,6 +89,11 @@ if(TARGET === 'start' || !TARGET) {
       host: process.env.HOST,
       port: process.env.PORT
     },
+    output: {
+      path: PATHS.build,
+      // libraryTarget: 'umd',
+      filename: 'index.js'
+    },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new NpmInstallPlugin({
@@ -106,7 +112,7 @@ if(TARGET === 'umd') {
     libraryTarget: 'umd',
   },
   externals: {
-    react: {
+    'react': {
       root: 'React',
       commonjs: 'react',
       commonjs2: 'react',

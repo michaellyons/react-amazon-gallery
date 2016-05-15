@@ -56,17 +56,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
 	var _Gallery = __webpack_require__(1);
 
 	var _Gallery2 = _interopRequireDefault(_Gallery);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _Gallery2.default;
+	module.exports = _Gallery2.default;
 
 /***/ },
 /* 1 */
