@@ -282,7 +282,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			var containerStyle = this.buildContainerStyle();
 			return _react2.default.createElement(
 				'div',
-				{ style: { position: 'relative' } },
+				{ style: _extends({ position: 'relative', width: '100%', height: '100%' }, this.props.style) },
 				_react2.default.createElement(
 					'div',
 					{ style: _extends({}, containerStyle, { position: 'relative', width: '100%', height: '100%' }) },

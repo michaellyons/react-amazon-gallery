@@ -196,7 +196,7 @@ const Gallery = React.createClass({
 		}.bind(this)) : null;
 		let containerStyle = this.buildContainerStyle();
 		return (
-			<div style={{position: 'relative'}}>
+			<div style={{position: 'relative', width: '100%', height: '100%', ...this.props.style}}>
 				<div style={{...containerStyle, position: 'relative', width: '100%', height: '100%'}}>
 					<div style={galleryMain} ref="section" />
 				</div>
