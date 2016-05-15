@@ -102,8 +102,8 @@ if(TARGET === 'umd') {
   module.exports = merge(common, {
   output: {
     path: PATHS.umd,
+    library: 'Gallery',
     libraryTarget: 'umd',
-    filename: 'index.js'
   },
   externals: {
     react: {
@@ -112,7 +112,12 @@ if(TARGET === 'umd') {
       commonjs2: 'react',
       amd: 'react'
     },
-  'react-dom': 'react-dom'
+    'react-dom': {
+        root: 'ReactDOM',
+        commonjs2: 'react-dom',
+        commonjs: 'react-dom',
+        amd: 'react-dom'
+    }
   }
 
   });
