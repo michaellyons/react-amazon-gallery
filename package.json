@@ -3,7 +3,8 @@
   "version": "0.1.11",
   "scripts": {
     "build": "babel ./src --out-dir ./lib",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "umd": "webpack"
   },
   "main": "./lib",
   "repository": {

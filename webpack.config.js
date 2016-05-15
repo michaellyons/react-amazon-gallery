@@ -9,7 +9,8 @@ const TARGET = process.env.npm_lifecycle_event;
 const PATHS = {
   src: path.join(__dirname, 'src'),
   build: path.join(__dirname, 'build'),
-  lib: path.join(__dirname, 'lib')
+  umd: path.join(__dirname, 'umd'),
+  lib: path.join(__dirname, 'lib'),
 };
 
 const common = {
@@ -26,19 +27,10 @@ const common = {
     extensions: ['', '.js', '.jsx']
   },
   output: {
-    path: PATHS.build,
+    path: PATHS.lib,
     // libraryTarget: 'umd',
     filename: 'index.js'
   },
-  // externals: {
-  //   react: {
-  //     root: 'React',
-  //     commonjs: 'react',
-  //     commonjs2: 'react',
-  //     amd: 'react'
-  //   },
-  // 'react-dom': 'react-dom'
-  // },
   module: {
     loaders: [
       {
@@ -106,6 +98,22 @@ if(TARGET === 'start' || !TARGET) {
 
 }
 
-if(TARGET === 'build') {
-  module.exports = merge(common, {});
+if(TARGET === 'umd') {
+  module.exports = merge(common, {
+  output: {
+    path: PATHS.umd,
+    libraryTarget: 'umd',
+    filename: 'index.js'
+  },
+  externals: {
+    react: {
+      root: 'React',
+      commonjs: 'react',
+      commonjs2: 'react',
+      amd: 'react'
+    },
+  'react-dom': 'react-dom'
+  }
+
+  });
 }

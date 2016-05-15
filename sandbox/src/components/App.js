@@ -2,7 +2,7 @@ import React from 'react';
 import PubGallery from 'react-amazon-gallery';
 import WorkingGallery from './Gallery';
 const DEFAULT_CONFIG = {
-  cHeight: 400,
+  cHeight: '400',
   orientation: 'vertical',
   overlay: false, 
   posY: 'top',
@@ -28,6 +28,7 @@ library.json = {
       return r + (pEnd || '');
       },
    prettyPrint: function(obj) {
+      if (!obj) return '{}';
       var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
       return JSON.stringify(obj, null, 3)
          .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
@@ -70,6 +71,18 @@ var App = React.createClass({
   isConfigSet(config, value) {
     return this.state[config] === value;
   },
+  filter(state) {
+    if (Object(state)) {
+      let filteredState = {};
+      Object.keys(state).map(function(key) {
+        if (state[key] !== DEFAULT_CONFIG[key]) {
+          filteredState[key] = state[key];
+        }
+      });
+      return filteredState;
+    };
+    return false;
+  },
   render() {
     let {orientation, posY} = this.state;
   	let imageArray = [
@@ -79,8 +92,12 @@ var App = React.createClass({
   		'/img/land3.jpg',
   		'/img/land4.jpg',
   	];
+    let codeSectionHeader = {
+      padding: '0 1em'
+    };
+    let filteredState = this.filter(this.state);
     return (
-      <div>
+      <div style={{padding: '1em'}}>
       <h1 style={{width: '100%'}}>React Amazon Gallery</h1>
       <div style={{width: '100%', height: '50%', display: 'flex', flexWrap: 'wrap', position: 'relative'}}>
         <div style={{width: '50%', height: '100%'}}>
@@ -146,8 +163,14 @@ var App = React.createClass({
           </label>
       </div>
     </div>
-      <div><h3>Config Object</h3></div>
-      <pre><code dangerouslySetInnerHTML={createMarkup('let config = '+library.json.prettyPrint(this.state)+';')}></code></pre>
+      <div style={codeSectionHeader}><h4>Import Statement</h4></div>
+      <pre><code>{"import Gallery from 'react-amazon-gallery';"}</code></pre>
+      <div style={codeSectionHeader}><h4>Config Object</h4></div>
+      <pre><code dangerouslySetInnerHTML={createMarkup('let config = '+library.json.prettyPrint(filteredState)+';')}></code></pre>
+      <div style={codeSectionHeader}><h4>Images Array</h4></div>
+      <pre><code dangerouslySetInnerHTML={createMarkup('let images = '+library.json.prettyPrint(imageArray)+';')}></code></pre>
+      <div style={codeSectionHeader}><h4>React Component</h4></div>
+      <pre><code>{"<"+"Gallery images={images} "+(Object.keys(filteredState).length > 0 ? 'config={config}' : '')+" />"}</code></pre>
 
     </div>
     );
