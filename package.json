@@ -1,6 +1,6 @@
 {
   "name": "react-amazon-gallery",
-  "version": "0.1.9",
+  "version": "0.1.11",
   "scripts": {
     "build": "babel ./src --out-dir ./lib",
     "start": "webpack-dev-server"
