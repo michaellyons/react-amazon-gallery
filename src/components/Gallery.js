@@ -177,7 +177,7 @@ const Gallery = React.createClass({
 		let itemlayout = this.getItemLayout();
 
 		let galleryMain = {
-			height: this.getConfig(['cHeight'])['cHeight']+'px',
+			height: '100%',
 			width: '100%',
 			backgroundImage: "url('"+imageLoc+"')",
 			backgroundSize: 'contain',

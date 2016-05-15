@@ -260,7 +260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			var itemlayout = this.getItemLayout();
 
 			var galleryMain = {
-				height: this.getConfig(['cHeight'])['cHeight'] + 'px',
+				height: '100%',
 				width: '100%',
 				backgroundImage: "url('" + imageLoc + "')",
 				backgroundSize: 'contain',
