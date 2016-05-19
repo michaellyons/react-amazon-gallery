@@ -1,4 +1,4 @@
-# react-amazon-gallery
+# React-Amazon-Gallery
 This is a React JS Component inspired by clean gallery design.
 
 ###Sample Screencap
