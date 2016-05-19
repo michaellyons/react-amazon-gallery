@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>React Amazon Sandbox</title>
+    <meta name="description" content="just another react + webpack boilerplate">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="https://fb.me/react-15.0.2.js"></script>
+<script src="https://fb.me/react-dom-15.0.2.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+<script src="umd/index.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+if (!library)
+   var library = {};
+
+library.json = {
+   replacer: function(match, pIndent, pKey, pVal, pEnd) {
+      var key = '<span class="json-key">';
+      var val = '<span class="json-value">';
+      var str = '<span class="json-string">';
+      var r = pIndent || '';
+      if (pKey)
+         r = r + key + pKey.replace(/[": ]/g, '') + '</span>: ';
+      if (pVal)
+         r = r + (pVal[0] == '"' ? str : val) + pVal + '</span>';
+      return r + (pEnd || '');
+      },
+   prettyPrint: function(obj) {
+      if (!obj) return '{}';
+      var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+      return JSON.stringify(obj, null, 3)
+         .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
+         .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+         .replace(jsonLine, library.json.replacer);
+      }
+   };
+
+function createMarkup(markup) { return {__html: markup}; };
+
+const DEFAULT_CONFIG = {
+  cHeight: '400',
+  orientation: 'vertical',
+  overlay: false, 
+  posY: 'top',
+  posX: 'left',
+  jewelSpacing: 8,
+  jewelSize: 42,
+  hlColor: '#ff8c00',
+  hlSize: 16,
+};
+var App = React.createClass({
+  getInitialState() {
+    return {
+      ...DEFAULT_CONFIG
+    }
+  },
+  resetDefault() {
+    this.setState({...DEFAULT_CONFIG});
+  },
+  changeConfig(config, val, e) {
+    e.preventDefault();
+    let {...newState} = this.state;
+    newState[config] = val;
+    this.setState(newState);
+  },
+  handleTextChange(prop, e) {
+    e.preventDefault();
+    let {...newState} = this.state;
+    newState[prop] = e.target.value;
+    this.setState(newState);
+  },
+  handleSlider(slider, value, e) {
+    let {...newState} = this.state;
+    newState[slider] = e;
+    this.setState(newState);
+  },
+  changeColor(color) {
+    let {...newState} = this.state;
+    newState['hlColor'] = color;
+    this.setState(newState);
+  },
+  isConfigSet(config, value) {
+    return this.state[config] === value;
+  },
+  filter(state) {
+    if (Object(state)) {
+      let filteredState = {};
+      Object.keys(state).map(function(key) {
+        if (state[key] !== DEFAULT_CONFIG[key]) {
+          filteredState[key] = state[key];
+        }
+      });
+      return filteredState;
+    };
+    return false;
+  },
+  render() {
+    let {orientation, posY} = this.state;
+    let imageArray = [
+      'sandbox/static/img/land0.jpg',
+      'sandbox/static/img/land1.jpg',
+      'sandbox/static/img/land2.jpg',
+      'sandbox/static/img/land3.jpg',
+      'sandbox/static/img/land4.jpg',
+    ];
+    let codeSectionHeader = {
+      padding: '0 1em'
+    };
+    let filteredState = this.filter(this.state);
+    return (
+      <div style={{padding: '1em'}}>
+      <h1 style={{width: '100%'}}>React Amazon Gallery</h1>
+      <div style={{width: '100%', height: '50%', display: 'flex', flexWrap: 'wrap', position: 'relative'}}>
+        <div style={{width: '50%', height: '100%'}}>
+          <Gallery config={this.state} images={imageArray} />
+        </div>
+        <div style={{width: '50%', height: '100%', padding: '1em'}} className='configSection'>
+          <button className="btn btn-default" type="submit" onClick={this.resetDefault}>Reset</button>
+          <div>
+         Container Height
+          <input
+            type="text"
+            value={this.state.cHeight}
+            onChange={this.handleTextChange.bind(null, 'cHeight')}
+          />
+          </div>
+          <div>
+         Jewel Size
+          <input
+            type="text"
+            value={this.state.jewelSize}
+            onChange={this.handleTextChange.bind(null, 'jewelSize')}
+          />
+          </div>
+          <div>
+         Jewel Spacing
+          <input
+            type="text"
+            value={this.state.jewelSpacing}
+            onChange={this.handleTextChange.bind(null, 'jewelSpacing')}
+          />
+          </div>
+          <div>
+         Highlight Color
+          <input
+            type="text"
+            value={this.state.hlColor}
+            onChange={this.handleTextChange.bind(null, 'hlColor')}
+          />
+          </div>
+          <div>
+         Highlight Size
+          <input
+            type="text"
+            value={this.state.hlSize}
+            onChange={this.handleTextChange.bind(null, 'hlSize')}
+          />
+          </div>
+          <div>
+              <h2>Layout</h2>
+              <button className={"btn btn-default"+(this.isConfigSet('orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'vertical')}>Vertical</button>
+              <button className={"btn btn-default"+(this.isConfigSet('orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'horizontal')}>Horizontal</button>
+          </div>
+          <div>
+              <h2>Position</h2>
+              <button className={"btn btn-default"+(this.isConfigSet('posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'top')}>Top</button>
+              <button className={"btn btn-default"+(this.isConfigSet('posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'bot')}>Bot</button>
+              <button className={"btn btn-default"+(this.isConfigSet('posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'left')}>Left</button>
+              <button className={"btn btn-default"+(this.isConfigSet('posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'right')}>Right</button>
+          </div>
+          Overlay 
+          <label>
+            <input name='overlay' checked={this.state.overlay} value={this.state.overlay} type="checkbox" onClick={this.changeConfig.bind(null, 'overlay', !this.state.overlay)} />
+          </label>
+      </div>
+    </div>
+      <div style={codeSectionHeader}><h4>Import Statement</h4></div>
+      <pre><code>{"import Gallery from 'react-amazon-gallery';"}</code></pre>
+      <div style={codeSectionHeader}><h4>Config Object</h4></div>
+      <pre><code dangerouslySetInnerHTML={createMarkup('let config = '+library.json.prettyPrint(filteredState)+';')}></code></pre>
+      <div style={codeSectionHeader}><h4>Images Array</h4></div>
+      <pre><code dangerouslySetInnerHTML={createMarkup('let images = '+library.json.prettyPrint(imageArray)+';')}></code></pre>
+      <div style={codeSectionHeader}><h4>React Component</h4></div>
+      <pre><code>{"<"+"Gallery images={images} "+(Object.keys(filteredState).length > 0 ? 'config={config}' : '')+" />"}</code></pre>
+
+    </div>
+    );
+  }
+});
+ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
