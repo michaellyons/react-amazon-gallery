@@ -1,5 +1,10 @@
 # react-amazon-gallery
-This is a React JS Component inspired by clean gallery design. 
+This is a React JS Component inspired by clean gallery design.
+
+###Sample Screencap
+![Image of Gallery]
+(http://imgur.com/CHVrtc3)
+
 ###Current Capabilities
 1. List Gallery View
   * Renders a one dimensional array of image src strings.
