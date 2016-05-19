@@ -1,4 +1,3 @@
-
 #React Amazon Gallery
 [![npm package](https://img.shields.io/npm/v/react-amazon-gallery.svg?style=flat-square)](https://www.npmjs.org/package/react-amazon-gallery)
 
