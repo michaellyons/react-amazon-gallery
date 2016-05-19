@@ -68,6 +68,7 @@ export default MyAwesomeReactComponent;
 The component has a Config prop that may be passed an object with these keys:
 
 Key | Type | Description
+----- | ----- | -----
 cHeight | Integer/String | If set, this will override the Gallery's height from 100% to the pixels indicated
 orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
 overlay | Boolean | If set, the image thumbnails will not be given gutter padding
