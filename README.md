@@ -3,7 +3,7 @@ This is a React JS Component inspired by clean gallery design.
 
 ###Sample Screencap
 ![Image of Gallery]
-(http://imgur.com/CHVrtc3)
+(http://i.imgur.com/CHVrtc3.jpg)
 
 ###Current Capabilities
 1. List Gallery View
