@@ -67,16 +67,16 @@ export default MyAwesomeReactComponent;
 
 The component has a Config prop that may be passed an object with these keys:
 
-| Key | Type | Description |
-| cHeight | Integer/String | If set, this will override the Gallery's height from 100% to the pixels indicated |
-| orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails |
-| overlay | Boolean | If set, the image thumbnails will not be given gutter padding |
-| posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned |
-| posX | Enum | 'left' or 'right' will shift where the thumbnails are positioned |
-| jewelSpacing | Integer | Distance between image thumbnails |
-| jewelSize | Integer | Sets the size of the thumbnails |
-| hlColor | String | Accepts CSS colors (Hex/Names) |
-| hlSize | Integer | Sets the size of the thumbnail's highlight glow effect |
+Key | Type | Description
+cHeight | Integer/String | If set, this will override the Gallery's height from 100% to the pixels indicated
+orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
+overlay | Boolean | If set, the image thumbnails will not be given gutter padding
+posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned
+posX | Enum | 'left' or 'right' will shift where the thumbnails are positioned
+jewelSpacing | Integer | Distance between image thumbnails
+jewelSize | Integer | Sets the size of the thumbnails
+hlColor | String | Accepts CSS colors (Hex/Names)
+hlSize | Integer | Sets the size of the thumbnail's highlight glow effect
 
 ## Sandbox
 
