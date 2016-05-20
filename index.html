@@ -6,7 +6,9 @@
     <title>React Amazon Sandbox</title>
     <meta name="description" content="just another react + webpack boilerplate">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="sandbox/static/css/main.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
 <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <script src="https://fb.me/react-15.0.2.js"></script>
@@ -115,7 +117,7 @@ var App = React.createClass({
     };
     let filteredState = this.filter(this.state);
     return (
-      <div style={{padding: '1em'}}>
+      <div style={{padding: '1em', height: '100%'}}>
       <h1 style={{width: '100%'}}>React Amazon Gallery</h1>
       <div style={{width: '100%', height: '50%', display: 'flex', flexWrap: 'wrap', position: 'relative'}}>
         <div style={{width: '50%', height: '100%'}}>
