@@ -1,8 +1,8 @@
 import React from 'react';
-
 import GalleryBox from './GalleryBox';
 let DEFAULTS = {
-	containerHeight: 400,
+	containerHeight: false,
+	containerWidth: false,
 	fullSize: false,
 	hlColor: '#ff8c00',
 	hlSize: 16,
@@ -21,29 +21,56 @@ const Gallery = React.createClass({
 		this.setState({index: i});
 	},
 	getConfig(params) {
-		if (params == null || !params) return false;
-
+		if (params === null || !params) return false;
 		let {config} = this.props;
 		let setConfig = {};
-		if (config) {
-			params.map(function(param) {
-				if (config[param]) {
-					setConfig[param] = config[param];
-				} else {
+		// Check datatype of params passed, collect config based on type
+		if (Array.isArray(params)) {
+			if (config) {
+				params.map(function(param) {
+					if (config[param]) {
+						setConfig[param] = config[param];
+					} else {
+						setConfig[param] = DEFAULTS[param];
+					}
+					return
+				});
+			} else {
+				params.map(function(param) {
 					setConfig[param] = DEFAULTS[param];
-				}
-				return
-			});
+					return
+				});
+			}
+		} else if (typeof params === 'string') {
+			if (config) {
+				setConfig = config[params];
+			} else {
+				setConfig = DEFAULTS[params];
+			}
+		} else if (typeof params === 'object') {
+			if (config) {
+				Object.keys(params).map(function(param) {
+					if (config[param]) {
+						setConfig[param] = config[param];
+					} else {
+						setConfig[param] = DEFAULTS[param];
+					}
+					return
+				});
+			} else {
+				Object.keys(params).map(function(param) {
+					setConfig[param] = DEFAULTS[param];
+					return
+				});
+			}
 		} else {
-			params.map(function(param) {
-				setConfig[param] = DEFAULTS[param];
-				return
-			});
+			return false;
 		}
+
 		return setConfig;
 	},
 	getItemLayout() {
-		let {orientation} = this.getConfig(['orientation']);
+		let orientation = this.getConfig('orientation');
 		let style;
 		switch (orientation) {
 			case 'vertical':
@@ -81,7 +108,7 @@ const Gallery = React.createClass({
 		return this.getOrientationY(this.getOrientationX(style));
 	},
 	getOrientationX(style) {
-		let {posX} = this.getConfig(['posX']);
+		let posX = this.getConfig('posX');
 		switch (posX) {
 			case 'right':
 				style = {
@@ -107,7 +134,7 @@ const Gallery = React.createClass({
 		return style;
 	},
 	getOrientationY(style) {
-		let {posY} = this.getConfig(['posY']);
+		let posY = this.getConfig('posY');
 		switch (posY) {
 			case 'top':
 				style = {
@@ -177,7 +204,7 @@ const Gallery = React.createClass({
 		let itemlayout = this.getItemLayout();
 
 		let galleryMain = {
-			height: '100%',
+			height: this.getConfig('cHeight')+'px',
 			width: '100%',
 			backgroundImage: "url('"+imageLoc+"')",
 			backgroundSize: 'contain',
@@ -191,12 +218,12 @@ const Gallery = React.createClass({
 			let imgLocation = images[i];
 
 			return <div style={itemlayout.jewel} onMouseEnter={this.handleEnter.bind(null, n)} key={i}>
-					<GalleryBox config={jewelStyle} orientation={this.getConfig(['orientation']).orientation} index={this.state.index} place={i} img={img} />
+					<GalleryBox config={jewelStyle} orientation={this.getConfig('orientation')} index={this.state.index} place={i} img={img} />
 					</div>
 		}.bind(this)) : null;
 		let containerStyle = this.buildContainerStyle();
 		return (
-			<div style={{position: 'relative', width: '100%', height: '100%', ...this.props.style}}>
+			<div style={{position: 'relative'}}>
 				<div style={{...containerStyle, position: 'relative', width: '100%', height: '100%'}}>
 					<div style={galleryMain} ref="section" />
 				</div>

@@ -76,6 +76,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -87,7 +89,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var DEFAULTS = {
-		containerHeight: 400,
+		containerHeight: false,
+		containerWidth: false,
 		fullSize: false,
 		hlColor: '#ff8c00',
 		hlSize: 16,
@@ -107,33 +110,57 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.setState({ index: i });
 		},
 		getConfig: function getConfig(params) {
-			if (params == null || !params) return false;
-
+			if (params === null || !params) return false;
 			var config = this.props.config;
 
 			var setConfig = {};
-			if (config) {
-				params.map(function (param) {
-					if (config[param]) {
-						setConfig[param] = config[param];
-					} else {
+			// Check datatype of params passed, collect config based on type
+			if (Array.isArray(params)) {
+				if (config) {
+					params.map(function (param) {
+						if (config[param]) {
+							setConfig[param] = config[param];
+						} else {
+							setConfig[param] = DEFAULTS[param];
+						}
+						return;
+					});
+				} else {
+					params.map(function (param) {
 						setConfig[param] = DEFAULTS[param];
-					}
-					return;
-				});
+						return;
+					});
+				}
+			} else if (typeof params === 'string') {
+				if (config) {
+					setConfig = config[params];
+				} else {
+					setConfig = DEFAULTS[params];
+				}
+			} else if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) === 'object') {
+				if (config) {
+					Object.keys(params).map(function (param) {
+						if (config[param]) {
+							setConfig[param] = config[param];
+						} else {
+							setConfig[param] = DEFAULTS[param];
+						}
+						return;
+					});
+				} else {
+					Object.keys(params).map(function (param) {
+						setConfig[param] = DEFAULTS[param];
+						return;
+					});
+				}
 			} else {
-				params.map(function (param) {
-					setConfig[param] = DEFAULTS[param];
-					return;
-				});
+				return false;
 			}
+
 			return setConfig;
 		},
 		getItemLayout: function getItemLayout() {
-			var _getConfig = this.getConfig(['orientation']);
-
-			var orientation = _getConfig.orientation;
-
+			var orientation = this.getConfig('orientation');
 			var style = void 0;
 			switch (orientation) {
 				case 'vertical':
@@ -162,10 +189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			return this.getOrientationY(this.getOrientationX(style));
 		},
 		getOrientationX: function getOrientationX(style) {
-			var _getConfig2 = this.getConfig(['posX']);
-
-			var posX = _getConfig2.posX;
-
+			var posX = this.getConfig('posX');
 			switch (posX) {
 				case 'right':
 					style = _extends({}, style, {
@@ -187,10 +211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			return style;
 		},
 		getOrientationY: function getOrientationY(style) {
-			var _getConfig3 = this.getConfig(['posY']);
-
-			var posY = _getConfig3.posY;
-
+			var posY = this.getConfig('posY');
 			switch (posY) {
 				case 'top':
 					style = _extends({}, style, {
@@ -260,7 +281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			var itemlayout = this.getItemLayout();
 
 			var galleryMain = {
-				height: '100%',
+				height: this.getConfig('cHeight') + 'px',
 				width: '100%',
 				backgroundImage: "url('" + imageLoc + "')",
 				backgroundSize: 'contain',
@@ -276,13 +297,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				return _react2.default.createElement(
 					'div',
 					{ style: itemlayout.jewel, onMouseEnter: this.handleEnter.bind(null, n), key: i },
-					_react2.default.createElement(_GalleryBox2.default, { config: jewelStyle, orientation: this.getConfig(['orientation']).orientation, index: this.state.index, place: i, img: img })
+					_react2.default.createElement(_GalleryBox2.default, { config: jewelStyle, orientation: this.getConfig('orientation'), index: this.state.index, place: i, img: img })
 				);
 			}.bind(this)) : null;
 			var containerStyle = this.buildContainerStyle();
 			return _react2.default.createElement(
 				'div',
-				{ style: _extends({ position: 'relative', width: '100%', height: '100%' }, this.props.style) },
+				{ style: { position: 'relative' } },
 				_react2.default.createElement(
 					'div',
 					{ style: _extends({}, containerStyle, { position: 'relative', width: '100%', height: '100%' }) },
@@ -348,8 +369,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: 'center',
 				padding: 4,
-				width: size,
-				height: size,
+				width: size + 'px',
+				height: size + 'px',
 				margin: orientation === 'horizontal' ? spacePx : spacePx,
 				backgroundImage: "url('" + img + "')",
 				boxShadow: index === place ? boxShadow : 'none',
