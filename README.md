@@ -5,6 +5,7 @@
 [![Dependencies](https://img.shields.io/david/michaellyons/react-amazon-gallery.svg?style=flat-square)](https://david-dm.org/michaellyons/react-amazon-gallery)
 [![DevDependencies](https://img.shields.io/david/dev/michaellyons/react-amazon-gallery.svg?style=flat-square)](https://david-dm.org/michaellyons/react-amazon-gallery#info=devDependencies&view=list)
 
+
 This is a React JS Component inspired by clean gallery design.
 
 ###Sample Screencap
