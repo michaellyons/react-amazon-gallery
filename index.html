@@ -19,6 +19,17 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
+    const configTableDescription = {
+  cHeight: ['Container Height','400'],
+  orientation: ['Orientation', 'vertical'],
+  overlay: ['Overlay', false], 
+  posY: ['Position Y-Axis','top'],
+  posX: ['Position X-Axis', 'left'],
+  jewelSpacing: ['Jewel Spacing', 8],
+  jewelSize: ['Jewel Size', 42],
+  hlColor: ['Hightlight Color', '#ff8c00'],
+  hlSize: ['Hightlight Size']
+};
 if (!library)
    var library = {};
 
@@ -57,6 +68,7 @@ const DEFAULT_CONFIG = {
   hlColor: '#ff8c00',
   hlSize: 16,
 };
+
 var App = React.createClass({
   getInitialState() {
     return {
@@ -103,6 +115,18 @@ var App = React.createClass({
     };
     return false;
   },
+  buildConfigTable () {
+    let configs = ['cHeight', 'jewelSize', 'jewelSpacing', 'hlColor', 'hlSize'];
+    let configTableRows = configs.map(function(config, i) {
+      let value = this.state[config];
+      return <tr key={i}>
+        <td>{configTableDescription[config][0]}</td>
+        <td><input style={{textAlign: 'center'}} type='text' value={value} onChange={this.handleTextChange.bind(null, config)} /></td>
+        <td></td>
+      </tr>
+    }.bind(this));
+    return configTableRows;
+  },
   render() {
     let {orientation, posY} = this.state;
     let imageArray = [
@@ -115,83 +139,60 @@ var App = React.createClass({
     let codeSectionHeader = {
       padding: '0 1em'
     };
+    let configTable = this.buildConfigTable();
     let filteredState = this.filter(this.state);
     return (
-      <div style={{padding: '1em', height: '100%'}}>
-      <h1 style={{width: '100%'}}>React Amazon Gallery</h1>
-      <div style={{width: '100%', height: '50%', display: 'flex', flexWrap: 'wrap', position: 'relative'}}>
+      <div style={{padding: '1em'}} className='container'>
+      <div style={{width: '100%', textAlign: 'center', fontSize: '5em'}}>React Amazon Gallery</div>
+      <div style={{width: '100%', padding: '1em', height: '50%', display: 'flex', flexWrap: 'wrap', position: 'relative', border: '1px solid grey', borderRadius: 4}}>
         <div style={{width: '50%', height: '100%'}}>
           <Gallery config={this.state} images={imageArray} />
         </div>
-        <div style={{width: '50%', height: '100%', padding: '1em'}} className='configSection'>
-          <button className="btn btn-default" type="submit" onClick={this.resetDefault}>Reset</button>
+        <div className='col-6 col-lg-6 col-sm-6 col-md-6'>
+          <table style={{width: '100%'}}>
+          <thead>
+            <tr><th>Setting</th><th>Value</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            {configTable}
+          </tbody>
+          </table>
           <div>
-         Container Height
-          <input
-            type="text"
-            value={this.state.cHeight}
-            onChange={this.handleTextChange.bind(null, 'cHeight')}
-          />
+            Overlay 
+            <label>
+              <input name='overlay' checked={this.state.overlay ? '' : 'true'} type="checkbox" onClick={this.changeConfig.bind(null, 'overlay', !this.state.overlay)} />
+            </label>
           </div>
-          <div>
-         Jewel Size
-          <input
-            type="text"
-            value={this.state.jewelSize}
-            onChange={this.handleTextChange.bind(null, 'jewelSize')}
-          />
-          </div>
-          <div>
-         Jewel Spacing
-          <input
-            type="text"
-            value={this.state.jewelSpacing}
-            onChange={this.handleTextChange.bind(null, 'jewelSpacing')}
-          />
-          </div>
-          <div>
-         Highlight Color
-          <input
-            type="text"
-            value={this.state.hlColor}
-            onChange={this.handleTextChange.bind(null, 'hlColor')}
-          />
-          </div>
-          <div>
-         Highlight Size
-          <input
-            type="text"
-            value={this.state.hlSize}
-            onChange={this.handleTextChange.bind(null, 'hlSize')}
-          />
-          </div>
-          <div>
-              <h2>Layout</h2>
+          <div style={{float: 'left', width: '100%', justifyContent: 'space-around'}} className='flxbx flxwp'>
+              <div>
+              <h3>Layout</h3>
               <button className={"btn btn-default"+(this.isConfigSet('orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'vertical')}>Vertical</button>
               <button className={"btn btn-default"+(this.isConfigSet('orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'horizontal')}>Horizontal</button>
+              </div>
+              <div>
+                <h3>Y Axis</h3>
+                <button className={"btn btn-default"+(this.isConfigSet('posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'top')}>Top</button>
+                <button className={"btn btn-default"+(this.isConfigSet('posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'bot')}>Bot</button>
+              </div>
+              <div>
+                <h3>X Axis</h3>
+                <button className={"btn btn-default"+(this.isConfigSet('posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'left')}>Left</button>
+                <button className={"btn btn-default"+(this.isConfigSet('posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'right')}>Right</button>
+              </div>
           </div>
-          <div>
-              <h2>Position</h2>
-              <button className={"btn btn-default"+(this.isConfigSet('posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'top')}>Top</button>
-              <button className={"btn btn-default"+(this.isConfigSet('posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'bot')}>Bot</button>
-              <button className={"btn btn-default"+(this.isConfigSet('posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'left')}>Left</button>
-              <button className={"btn btn-default"+(this.isConfigSet('posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'right')}>Right</button>
-          </div>
-          Overlay 
-          <label>
-            <input name='overlay' checked={this.state.overlay} value={this.state.overlay} type="checkbox" onClick={this.changeConfig.bind(null, 'overlay', !this.state.overlay)} />
-          </label>
+
+
+          <button style={{position: 'absolute', right: 0, bottom: 0}} className="btn btn-default" type="submit" onClick={this.resetDefault}>Reset Defaults</button>
       </div>
     </div>
-      <div style={codeSectionHeader}><h4>Import Statement</h4></div>
-      <pre><code>{"import Gallery from 'react-amazon-gallery';"}</code></pre>
-      <div style={codeSectionHeader}><h4>Config Object</h4></div>
-      <pre><code dangerouslySetInnerHTML={createMarkup('let config = '+library.json.prettyPrint(filteredState)+';')}></code></pre>
-      <div style={codeSectionHeader}><h4>Images Array</h4></div>
-      <pre><code dangerouslySetInnerHTML={createMarkup('let images = '+library.json.prettyPrint(imageArray)+';')}></code></pre>
-      <div style={codeSectionHeader}><h4>React Component</h4></div>
-      <pre><code>{"<"+"Gallery images={images} "+(Object.keys(filteredState).length > 0 ? 'config={config}' : '')+" />"}</code></pre>
-
+      <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
+        <div style={codeSectionHeader}><h4>Usage</h4></div>
+        <pre><code>{"import React from 'react';"}
+            <br />{"import Gallery from 'react-amazon-gallery';"}</code></pre>
+        <pre><code dangerouslySetInnerHTML={createMarkup('let config = '+library.json.prettyPrint(filteredState)+';')}></code></pre>
+        <pre><code dangerouslySetInnerHTML={createMarkup('let images = '+library.json.prettyPrint(imageArray)+';')}></code></pre>
+        <pre><code>{"<"+"Gallery images={images} "+(Object.keys(filteredState).length > 0 ? 'config={config}' : '')+" />"}</code></pre>
+      </div>
     </div>
     );
   }
