@@ -17,23 +17,23 @@ const DEFAULT_CONFIG = {
   gallery: {
     bkgSize: 'contain',
     cHeight: 400,
-    orientation: 'vertical',
     overlay: false,
   },
   main: {
     posY: 'top',
     posX: 'left',
+    orientation: 'vertical',
     spacing: 8,
     size: 42,
     hlColor: '#ff8c00',
     hlSize: 16,
   },
   secondary: {
-    posY: 'top',
+    posY: 'bot',
     posX: 'left',
-    jewelSpacing: 8,
-    jewelSize: 42,
-    hlColor: '#ff8c00',
+    orientation: 'horizontal',
+    spacing: 8,
+    size: 42,
     hlSize: 16,
   }
 };
@@ -111,10 +111,14 @@ var App = React.createClass({
   resetDefault() {
     this.setState({...DEFAULT_CONFIG});
   },
-  changeConfig(config, val, e) {
+  changeConfig(source, config, val, e) {
     e.preventDefault();
     let {...newState} = this.state;
-    newState[config] = val;
+    if (source) {
+      newState[source][config] = val;
+    } else {
+      newState[config] = val;
+    }
     this.setState(newState);
   },
   handleTextChange(prop, e) {
@@ -185,25 +189,25 @@ var App = React.createClass({
               <h3 style={{width: '100%'}}>Secondary Jewels</h3>
               <div>
                 <h4>Layout</h4>
-                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'vertical')}>Vertical</button>
-                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'horizontal')}>Horizontal</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'orientation', 'vertical')}>Vertical</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null,  'secondary', 'orientation', 'horizontal')}>Horizontal</button>
               </div>
               <div>
                 <h4>Y Axis</h4>
-                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'top')}>Top</button>
-                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'bot')}>Bot</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'posY', 'top')}>Top</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'posY', 'bot')}>Bot</button>
               </div>
               <div>
                 <h4>X Axis</h4>
-                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'left')}>Left</button>
-                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'right')}>Right</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'posX', 'left')}>Left</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'posX', 'right')}>Right</button>
               </div>
           </div>
                     : null;
     return (
       <div style={{padding: '1em'}} className='container'>
 
-      <div style={{width: '100%', textAlign: 'center', fontSize: '5em'}}>React Amazon Gallery</div>
+      <div style={{width: '100%', textAlign: 'center', fontSize: '3em'}}><a href='https://github.com/michaellyons/react-amazon-gallery'>React Amazon Gallery</a></div>
       <div style={{width: '100%', justifyContent: 'center', display: 'flex', padding: '1em'}}>
         <button onClick={this.changeImageSource.bind(null, 1)} className={'button '+(this.state.imageSource == 1 ? 'button1' : 'button2')}>1 Dimension</button>
         <button onClick={this.changeImageSource.bind(null, 2)} className={'button '+(this.state.imageSource == 2 ? 'button1' : 'button2')}>2 Dimensions</button>
@@ -225,18 +229,18 @@ var App = React.createClass({
 
               <div>
                 <h4>Layout</h4>
-                <button className={"btn btn-default"+(this.isConfigSet('main', 'orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'vertical')}>Vertical</button>
-                <button className={"btn btn-default"+(this.isConfigSet('main', 'orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'horizontal')}>Horizontal</button>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'main', 'orientation', 'vertical')}>Vertical</button>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'main', 'orientation', 'horizontal')}>Horizontal</button>
               </div>
               <div>
                 <h4>Y Axis</h4>
-                <button className={"btn btn-default"+(this.isConfigSet('main', 'posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'top')}>Top</button>
-                <button className={"btn btn-default"+(this.isConfigSet('main', 'posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'bot')}>Bot</button>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'main', 'posY', 'top')}>Top</button>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'main', 'posY', 'bot')}>Bot</button>
               </div>
               <div>
                 <h4>X Axis</h4>
-                <button className={"btn btn-default"+(this.isConfigSet('main', 'posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'left')}>Left</button>
-                <button className={"btn btn-default"+(this.isConfigSet('main', 'posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'right')}>Right</button>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'main', 'posX', 'left')}>Left</button>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'main', 'posX', 'right')}>Right</button>
               </div>
           </div>
           {secondaryConfig}

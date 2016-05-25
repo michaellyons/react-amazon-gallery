@@ -7,6 +7,7 @@ let GalleryBox = React.createClass({
   	buildBox() {
   		let {img, config, spot, place, orientation, index} = this.props;
   		let {hlColor, hlSize, spacing, size} = config;
+  		
   		let boxShadow = '0 0 '+hlSize+'px '+hlColor;
   		let border = '1px solid '+hlColor;
   		let spacePx = spacing + 'px';
@@ -33,7 +34,7 @@ let GalleryBox = React.createClass({
 		let boxStyle = this.buildBox();
 
 		return (
-			<div style={boxStyle}>
+			<div style={{...boxStyle, ...this.props.style}}>
 			</div>
 		);
 	}

@@ -37,6 +37,7 @@
     "react-dom": "^15.0.2"
   },
   "dependencies": {
+    "main.js": "0.0.1",
     "react": "^15.0.2",
     "react-amazon-gallery": "^0.1.12",
     "react-colors-picker": "^2.3.1",
