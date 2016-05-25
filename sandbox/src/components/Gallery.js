@@ -1,35 +1,78 @@
 import React from 'react';
 import GalleryBox from './GalleryBox';
 let DEFAULTS = {
+	bkgSize: 'cover',
 	containerHeight: false,
 	containerWidth: false,
 	fullSize: false,
-	hlColor: '#ff8c00',
-	hlSize: 16,
-	jewelSize: 40,
-	jewelSpacing: 16,
-	orientation: 'vertical',
+	injectJewelB: false,
+	injectionIdentifier: null,
 	overlay: false,
-	posX: 'left',
-	posY: 'top'
+	main: {
+		hlColor: '#ff8c00',
+		hlSize: 16,
+		jewelSize: 40,
+		jewelSpacing: 16,
+		orientation: 'vertical',
+		posX: 'left',
+		posY: 'top'
+	},
+	secondary: {
+		hlColor: '#ff8c00',
+		hlSize: 16,
+		jewelSize: 40,
+		jewelSpacing: 16,
+		orientation: 'horizontal',
+		posX: 'left',
+		posY: 'bot'
+	}
+};
+function isOfType (type, test) {
+	if (Array.isArray(test)) {
+		return type == 'array';
+	} else {
+		return typeof test === type;
+	}
 };
 const Gallery = React.createClass({
 	getInitialState() {
-		return {index: 0};
+		return {index: 0, selection: 0};
 	},
-	handleEnter(i) {
-		this.setState({index: i});
+	handleEnter(i, place) {
+		let {...newState} = this.state;
+		newState[place] = i;
+		this.setState(newState);
 	},
-	getConfig(params) {
+	changeSelection(i) {
+		this.setState({selection: i});
+	},
+	getGalleryType() {
+		let {images} = this.props;
+		let galleryType;
+		if (Array.isArray(images)) {
+			if (images.every(i => Array.isArray(i))) {
+				galleryType = 2;
+			} else if (images.every(i => typeof i === 'string')) {
+				galleryType = 1;
+			} else {
+				galleryType = 0;
+			}
+		} else {
+			galleryType = 3;
+		}
+		return galleryType;
+	},
+	getConfig(place, params) {
 		if (params === null || !params) return false;
 		let {config} = this.props;
 		let setConfig = {};
+		let configPlace = place ? config[place] ? config[place] : DEFAULTS[place] : false;
 		// Check datatype of params passed, collect config based on type
 		if (Array.isArray(params)) {
-			if (config) {
+			if (configPlace) {
 				params.map(function(param) {
-					if (config[param]) {
-						setConfig[param] = config[param];
+					if (configPlace[param]) {
+						setConfig[param] = configPlace[param];
 					} else {
 						setConfig[param] = DEFAULTS[param];
 					}
@@ -42,16 +85,16 @@ const Gallery = React.createClass({
 				});
 			}
 		} else if (typeof params === 'string') {
-			if (config) {
-				setConfig = config[params];
+			if (configPlace[params]) {
+				setConfig = configPlace[params];
 			} else {
 				setConfig = DEFAULTS[params];
 			}
 		} else if (typeof params === 'object') {
 			if (config) {
 				Object.keys(params).map(function(param) {
-					if (config[param]) {
-						setConfig[param] = config[param];
+					if (configPlace[param]) {
+						setConfig[param] = configPlace[param];
 					} else {
 						setConfig[param] = DEFAULTS[param];
 					}
@@ -78,8 +121,11 @@ const Gallery = React.createClass({
 					mainContainer: {
 
 					},
-					jewel: {
+					index: {
 
+					},
+					selection: {
+						float: 'left'
 					}
 				};
 				break;
@@ -88,8 +134,11 @@ const Gallery = React.createClass({
 					mainContainer: {
 					  
 					},
-					jewel: {
+					index: {
 					  float: 'left'
+					},
+					selection: {
+
 					}
 				};
 				break;
@@ -98,7 +147,7 @@ const Gallery = React.createClass({
 					mainContainer: {
 						
 					},
-					jewel: {
+					index: {
 					}
 				}
 		}
@@ -117,7 +166,10 @@ const Gallery = React.createClass({
 						position: 'absolute',
 						right: 0,
 						...style.jewelContainer
-					}					
+					},
+					jewelSecondaryContainer: {
+
+					}
 				};
 				break;
 			case 'left':
@@ -128,6 +180,9 @@ const Gallery = React.createClass({
 						position: 'absolute',
 						bottom: 0,
 						...style.jewelContainer
+					},
+					jewelSecondaryContainer: {
+						
 					}
 				};
 		}
@@ -143,7 +198,10 @@ const Gallery = React.createClass({
 						position: 'absolute',
 						top: 0,
 						...style.jewelContainer
-					},  					
+					},
+					jewelSecondaryContainer: {
+						
+					}					
 				};
 				break;
 			case 'bot':
@@ -159,18 +217,16 @@ const Gallery = React.createClass({
 		}
 		return style;
 	},
-	buildJewelStyle() {
-		let config = this.getConfig(['hlSize', 'hlColor', 'jewelSize', 'jewelSpacing']);
+	buildJewelStyle(kind) {
+		if (!kind) return DEFAULTS.main;
+		let config = this.getConfig(kind, ['hlSize', 'hlColor', 'jewelSize', 'jewelSpacing']);
 		let style = {
-			size: config.jewelSize ? (config.jewelSize) : 40,
-			hlColor: config.hlColor ? config.hlColor : 'darkorange',
-			hlSize: config.hlSize ? config.hlSize : 15,
-			spacing: config.jewelSpacing ? config.jewelSpacing : 0,
+			...config
 		};
 		return style;
 	},
-	buildContainerStyle() {
-		let config = this.getConfig(['overlay', 'hlSize', 'posY', 'posX','orientation', 'jewelSize']);
+	buildContainerStyle(kind) {
+		let config = this.getConfig(kind, ['overlay', 'hlSize', 'posY', 'posX','orientation', 'jewelSize']);
 		let containerStyle = {};
 		let paddingSize = parseInt(config.jewelSize) + parseInt(config.hlSize)/2 + 4 + 'px';
 		if (config.overlay) {
@@ -191,45 +247,98 @@ const Gallery = React.createClass({
 				} else {
 					derPadding = '0 0 0 '+paddingSize;
 				}
-			}
+			};
 			containerStyle = {
 				padding: derPadding
 			};
 		}
 		return containerStyle;
 	},
-	render() {
-		let {style, images, jewelSize} = this.props;
-		let imageLoc = images[this.state.index];
-		let itemlayout = this.getItemLayout();
+	buildJewels() {
+		let jewelContainers = {};
+		let gallType = this.getGalleryType();
+		if (Array.isArray(this.props.images)) {
+			switch(gallType) {
+				case 2:
+					jewelContainers = this.buildDualArray(this.props.images);
+					break;
+				case 1:
+				default:
+					jewelContainers = this.buildSingleArray(this.props.images, 'main');
+			}
+		}
+		return jewelContainers;
+	},
+	buildDualArray(images) {
+		let mainArray, secondaryArray;
+		let {index, selection} = this.state;
+		secondaryArray = images.map(function(imgArray, i) {
+			if (i == selection) {
+				mainArray = this.buildSingleArray(imgArray, 'main');
+			}
+			return this.buildJewel(imgArray[0], i, 'secondary');
+		}.bind(this));
+		return [mainArray, secondaryArray]
+	},
+	buildSingleArray(images, place) {
+		let imageJewels = images.length > 0 ? images.map(function(img, i) {
+			let imgLocation = images[i];
+			return this.buildJewel(img, i, place);
+		}.bind(this)) : null;
+		return imageJewels;
+	},
+	buildJewel(img, i, place) {
+		let jewelStyle = this.buildJewelStyle(place);
+			return <div style={jewelStyle.container} onMouseEnter={this.handleEnter.bind(null, i, place)} key={place+''+i}>
+						<GalleryBox config={jewelStyle} orientation={this.getConfig(place, 'orientation')} index={this.state[place]} spot={i} place={place} img={img} />
+					</div>
+	},
+	injectArray() {
 
+	},
+	getGalleryImage() {
+		let {index, selection} = this.state;
+		let {images} = this.props;
+		let kind = this.getGalleryType();
+		switch(kind) {
+			case 2:
+				return images[selection][index];
+				break;
+			case 1:
+			default:
+				return images[index];
+		};
+	},
+	render() {
+		if (!Array.isArray(this.props.images)) return <div style={{width: '100%',height: '100%', display: 'flex'}}><div style={{margin: 'auto'}}>No Images</div></div>;
+		
+		let {style, jewelContainerStyle, jewelSecondaryContainerStyle, galleryStyle, images, jewelSize} = this.props;
+
+		let itemlayout = this.getItemLayout();
+		let imageLoc = this.getGalleryImage();
 		let galleryMain = {
-			height: this.getConfig('cHeight')+'px',
+			height: this.getConfig('gallery', 'cHeight')+'px',
 			width: '100%',
 			backgroundImage: "url('"+imageLoc+"')",
-			backgroundSize: 'contain',
+			backgroundSize: this.getConfig('gallery', 'bkgSize') || 'contain',
 			backgroundRepeat: 'no-repeat',
 			backgroundPosition: 'center',
 		};
 
-		let jewelStyle = this.buildJewelStyle();
-		let imageJewels = images.length > 0 ? images.map(function(img, i) {
-			let n = i;
-			let imgLocation = images[i];
+		let jewels = this.buildJewels();
+		let jewelSet = Array.isArray(jewels[0]) ? jewels[0] : jewels;
+		let jewelSecondarySet = Array.isArray(jewels[1]) ? <div style={{...itemlayout.jewelSecondaryContainer, ...jewelSecondaryContainerStyle}}>{jewels[1]}</div> : null;
 
-			return <div style={itemlayout.jewel} onMouseEnter={this.handleEnter.bind(null, n)} key={i}>
-					<GalleryBox config={jewelStyle} orientation={this.getConfig('orientation')} index={this.state.index} place={i} img={img} />
-					</div>
-		}.bind(this)) : null;
 		let containerStyle = this.buildContainerStyle();
 		return (
-			<div style={{position: 'relative'}}>
+			<div style={{position: 'relative', ...style}}>
 				<div style={{...containerStyle, position: 'relative', width: '100%', height: '100%'}}>
-					<div style={galleryMain} ref="section" />
+					<div style={{...galleryMain, ...galleryStyle}} ref="section" />
 				</div>
-				<div style={itemlayout.jewelContainer}>
-					{imageJewels}
+				<div style={{...itemlayout.jewelContainer, ...jewelContainerStyle}}>
+					{jewelSet}
 				</div>
+				{jewelSecondarySet}
 			</div>
 		);
 	}

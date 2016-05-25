@@ -2,6 +2,7 @@ import React from 'react';
 import PubGallery from 'react-amazon-gallery';
 import WorkingGallery from './Gallery';
 const configTableDescription = {
+  bkgSize: ['Background Size','contain'],
   cHeight: ['Container Height','400'],
   orientation: ['Orientation', 'vertical'],
   overlay: ['Overlay', false], 
@@ -13,16 +14,65 @@ const configTableDescription = {
   hlSize: ['Hightlight Size']
 };
 const DEFAULT_CONFIG = {
-  cHeight: 400,
-  orientation: 'vertical',
-  overlay: false, 
-  posY: 'top',
-  posX: 'left',
-  jewelSpacing: 8,
-  jewelSize: 42,
-  hlColor: '#ff8c00',
-  hlSize: 16,
+  gallery: {
+    bkgSize: 'contain',
+    cHeight: 400,
+    orientation: 'vertical',
+    overlay: false,
+  },
+  main: {
+    posY: 'top',
+    posX: 'left',
+    spacing: 8,
+    size: 42,
+    hlColor: '#ff8c00',
+    hlSize: 16,
+  },
+  secondary: {
+    posY: 'top',
+    posX: 'left',
+    jewelSpacing: 8,
+    jewelSize: 42,
+    hlColor: '#ff8c00',
+    hlSize: 16,
+  }
 };
+const configHide = [
+  'imageSource'
+];
+let imageArray = [
+  '/img/sample_array/land0.jpg',
+  '/img/sample_array/land1.jpg',
+  '/img/sample_array/land2.jpg',
+  '/img/sample_array/land3.jpg',
+  '/img/sample_array/land4.jpg',
+];
+let imageMDArray = [
+  [
+  '/img/sample_map/blck_0.jpg',
+  '/img/sample_map/blck_1.jpg',
+  '/img/sample_map/blck_2.jpg',
+  '/img/sample_map/blck_3.jpg',
+  '/img/sample_map/blck_4.jpg',
+  '/img/sample_map/blck_5.jpg',
+  ],
+  [
+  '/img/sample_map/blue_0.jpg',
+  '/img/sample_map/blue_1.jpg',
+  '/img/sample_map/blue_2.jpg',
+  '/img/sample_map/blue_3.jpg',
+  '/img/sample_map/blue_4.jpg',
+  '/img/sample_map/blue_5.jpg',
+  ],
+  [
+  '/img/sample_map/red_0.jpg',
+  '/img/sample_map/red_1.jpg',
+  '/img/sample_map/red_2.jpg',
+  '/img/sample_map/red_3.jpg',
+  '/img/sample_map/red_4.jpg',
+  '/img/sample_map/red_5.jpg',
+  ]
+];
 if (!library)
    var library = {};
 
@@ -51,8 +101,12 @@ library.json = {
 var App = React.createClass({
   getInitialState() {
     return {
-      ...DEFAULT_CONFIG
+      ...DEFAULT_CONFIG,
+      imageSource: 2,
     }
+  },
+  changeImageSource(i) {
+    this.setState({imageSource: i});
   },
   resetDefault() {
     this.setState({...DEFAULT_CONFIG});
@@ -79,14 +133,14 @@ var App = React.createClass({
     newState['hlColor'] = color;
     this.setState(newState);
   },
-  isConfigSet(config, value) {
-    return this.state[config] === value;
+  isConfigSet(source, config, value) {
+    return this.state[source][config] === value;
   },
   filter(state) {
     if (Object(state)) {
       let filteredState = {};
       Object.keys(state).map(function(key) {
-        if (state[key] !== DEFAULT_CONFIG[key]) {
+        if (state[key] !== DEFAULT_CONFIG[key] && !configHide.includes(key)) {
           filteredState[key] = state[key];
         }
       });
@@ -94,10 +148,10 @@ var App = React.createClass({
     };
     return false;
   },
-  buildConfigTable () {
-    let configs = ['cHeight', 'jewelSize', 'jewelSpacing', 'hlColor', 'hlSize'];
+  buildConfigTable (obj) {
+    let configs = ['bkgSize','cHeight'];
     let configTableRows = configs.map(function(config, i) {
-      let value = this.state[config];
+      let value = this.state[obj][config];
       return <tr key={i}>
         <td>{configTableDescription[config][0]}</td>
         <td><input style={{textAlign: 'center'}} type='text' value={value} onChange={this.handleTextChange.bind(null, config)} /></td>
@@ -106,60 +160,86 @@ var App = React.createClass({
     }.bind(this));
     return configTableRows;
   },
+  getImageSource() {
+    let type = this.state.imageSource;
+    switch(type) {
+      case 2:
+        return imageMDArray;
+        break;
+      case 1:
+      default:
+        return imageArray;
+    }
+  },
   render() {
     let {orientation, posY} = this.state;
-  	let imageArray = [
-      '/img/land0.jpg',
-  		'/img/land1.jpg',
-  		'/img/land2.jpg',
-  		'/img/land3.jpg',
-  		'/img/land4.jpg',
-  	];
+
     let codeSectionHeader = {
       padding: '0 1em'
     };
-    let configTable = this.buildConfigTable();
+    let galleryConfigTable = this.buildConfigTable('gallery');
     let filteredState = this.filter(this.state);
+    let imageSource = this.getImageSource();
+    let secondaryConfig = this.state.imageSource == 2 ?
+          <div style={{float: 'left', width: '100%', justifyContent: 'space-around'}} className='flxbx flxwp'>
+              <h3 style={{width: '100%'}}>Secondary Jewels</h3>
+              <div>
+                <h4>Layout</h4>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'vertical')}>Vertical</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'horizontal')}>Horizontal</button>
+              </div>
+              <div>
+                <h4>Y Axis</h4>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'top')}>Top</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'bot')}>Bot</button>
+              </div>
+              <div>
+                <h4>X Axis</h4>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'left')}>Left</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'right')}>Right</button>
+              </div>
+          </div>
+                    : null;
     return (
       <div style={{padding: '1em'}} className='container'>
+
       <div style={{width: '100%', textAlign: 'center', fontSize: '5em'}}>React Amazon Gallery</div>
-      <div style={{width: '100%', padding: '1em', height: '50%', display: 'flex', flexWrap: 'wrap', position: 'relative', border: '1px solid grey', borderRadius: 4}}>
+      <div style={{width: '100%', justifyContent: 'center', display: 'flex', padding: '1em'}}>
+        <button onClick={this.changeImageSource.bind(null, 1)} className={'button '+(this.state.imageSource == 1 ? 'button1' : 'button2')}>1 Dimension</button>
+        <button onClick={this.changeImageSource.bind(null, 2)} className={'button '+(this.state.imageSource == 2 ? 'button1' : 'button2')}>2 Dimensions</button>
+      </div>
+      <div style={{width: '100%', padding: '1em', height: '60%', display: 'flex', flexWrap: 'wrap', position: 'relative', borderRadius: 4}}>
         <div style={{width: '50%', height: '100%'}}>
-          <WorkingGallery config={this.state} images={imageArray} />
+          <WorkingGallery config={this.state} images={imageSource} />
         </div>
         <div className='col-6 col-lg-6 col-sm-6 col-md-6'>
+          <h3 style={{width: '100%'}}>Gallery Settings</h3>
           <table style={{width: '100%'}}>
-          <thead>
-            <tr><th>Setting</th><th>Value</th><th>Notes</th></tr>
-          </thead>
           <tbody>
-            {configTable}
+            {galleryConfigTable}
+            <tr><td>Overlay</td><td onClick={this.changeConfig.bind(null, 'overlay', !this.state.overlay)}>{this.state.overlay ? 'On' : 'Off'}</td></tr>
           </tbody>
           </table>
-          <div>
-            Overlay 
-            <label>
-              <input name='overlay' checked={this.state.overlay ? '' : 'true'} type="checkbox" onClick={this.changeConfig.bind(null, 'overlay', !this.state.overlay)} />
-            </label>
-          </div>
           <div style={{float: 'left', width: '100%', justifyContent: 'space-around'}} className='flxbx flxwp'>
+              <h3 style={{width: '100%'}}>Main Jewels</h3>
+
               <div>
-              <h3>Layout</h3>
-              <button className={"btn btn-default"+(this.isConfigSet('orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'vertical')}>Vertical</button>
-              <button className={"btn btn-default"+(this.isConfigSet('orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'horizontal')}>Horizontal</button>
+                <h4>Layout</h4>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'vertical')}>Vertical</button>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'horizontal')}>Horizontal</button>
               </div>
               <div>
-                <h3>Y Axis</h3>
-                <button className={"btn btn-default"+(this.isConfigSet('posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'top')}>Top</button>
-                <button className={"btn btn-default"+(this.isConfigSet('posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'bot')}>Bot</button>
+                <h4>Y Axis</h4>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'top')}>Top</button>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'bot')}>Bot</button>
               </div>
               <div>
-                <h3>X Axis</h3>
-                <button className={"btn btn-default"+(this.isConfigSet('posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'left')}>Left</button>
-                <button className={"btn btn-default"+(this.isConfigSet('posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'right')}>Right</button>
+                <h4>X Axis</h4>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'left')}>Left</button>
+                <button className={"btn btn-default"+(this.isConfigSet('main', 'posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'right')}>Right</button>
               </div>
           </div>
-
+          {secondaryConfig}
 
           <button style={{position: 'absolute', right: 0, bottom: 0}} className="btn btn-default" type="submit" onClick={this.resetDefault}>Reset Defaults</button>
       </div>
@@ -169,8 +249,14 @@ var App = React.createClass({
         <pre><code>{"import React from 'react';"}
             <br />{"import Gallery from 'react-amazon-gallery';"}</code></pre>
         <pre><code dangerouslySetInnerHTML={createMarkup('let config = '+library.json.prettyPrint(filteredState)+';')}></code></pre>
-        <pre><code dangerouslySetInnerHTML={createMarkup('let images = '+library.json.prettyPrint(imageArray)+';')}></code></pre>
+        <pre><code dangerouslySetInnerHTML={createMarkup('let images = '+library.json.prettyPrint(imageSource)+';')}></code></pre>
         <pre><code>{"<"+"Gallery images={images} "+(Object.keys(filteredState).length > 0 ? 'config={config}' : '')+" />"}</code></pre>
+      </div>
+      <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
+        <div style={codeSectionHeader}><h4>Prerequisites</h4></div>
+        <div>Use <a href='http://www.npmjs.org'>NPM</a> for package bundling and <a href='http://facebook.github.io/react/'>React JS</a></div>
+        <div style={codeSectionHeader}><h4>Installation</h4></div>
+        <pre><code>{"npm install react-amazon-gallery"}</code></pre>
       </div>
     </div>
     );
