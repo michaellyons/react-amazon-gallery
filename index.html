@@ -17,19 +17,83 @@
 <script src="umd/index.js"></script>
   </head>
   <body>
+  <a href="https://github.com/michaellyons/react-amazon-gallery"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
     <div id="root"></div>
     <script type="text/babel">
-    const configTableDescription = {
-  cHeight: ['Container Height','400'],
-  orientation: ['Orientation', 'vertical'],
-  overlay: ['Overlay', false], 
-  posY: ['Position Y-Axis','top'],
-  posX: ['Position X-Axis', 'left'],
-  jewelSpacing: ['Jewel Spacing', 8],
-  jewelSize: ['Jewel Size', 42],
-  hlColor: ['Hightlight Color', '#ff8c00'],
-  hlSize: ['Hightlight Size']
+const configTableDescription = {
+  bkgSize: 'Background Size',
+  containerHeight: 'Container Height',
+  containerWidth: 'Container Width',
+  orientation: 'Orientation',
+  overlay: 'Overlay', 
+  posY: 'Position Y-Axis',
+  posX: 'Position X-Axis',
+  jewelSpacing: 'Jewel Spacing',
+  jewelSize: 'Jewel Size',
+  hlColor: 'Hightlight Color',
+  hlSize: 'Hightlight Size'
 };
+const DEFAULT_CONFIG = {
+  bkgSize: 'cover',
+  containerHeight: '300',
+  containerWidth: '100%',
+  fullSize: false,
+  injectJewelB: false,
+  injectionIdentifier: null,
+  main: {
+    posY: 'top',
+    posX: 'left',
+    orientation: 'vertical',
+    spacing: 8,
+    size: 42,
+    hlColor: '#ff8c00',
+    hlSize: 16,
+  },
+  secondary: {
+    posY: 'bot',
+    posX: 'left',
+    orientation: 'horizontal',
+    spacing: 8,
+    size: 42,
+    hlSize: 16,
+  }
+};
+const configHide = [
+  'imageSource'
+];
+let imageArray = [
+  'sandbox/static/img/sample_array/land0.jpg',
+  'sandbox/static/img/sample_array/land1.jpg',
+  'sandbox/static/img/sample_array/land2.jpg',
+  'sandbox/static/img/sample_array/land3.jpg',
+  'sandbox/static/img/sample_array/land4.jpg',
+];
+let imageMDArray = [
+  [
+  'sandbox/static/img/sample_map/blck_0.jpg',
+  'sandbox/static/img/sample_map/blck_1.jpg',
+  'sandbox/static/img/sample_map/blck_2.jpg',
+  'sandbox/static/img/sample_map/blck_3.jpg',
+  'sandbox/static/img/sample_map/blck_4.jpg',
+  'sandbox/static/img/sample_map/blck_5.jpg',
+  ],
+  [
+  'sandbox/static/img/sample_map/blue_0.jpg',
+  'sandbox/static/img/sample_map/blue_1.jpg',
+  'sandbox/static/img/sample_map/blue_2.jpg',
+  'sandbox/static/img/sample_map/blue_3.jpg',
+  'sandbox/static/img/sample_map/blue_4.jpg',
+  'sandbox/static/img/sample_map/blue_5.jpg',
+  ],
+  [
+  'sandbox/static/img/sample_map/red_0.jpg',
+  'sandbox/static/img/sample_map/red_1.jpg',
+  'sandbox/static/img/sample_map/red_2.jpg',
+  'sandbox/static/img/sample_map/red_3.jpg',
+  'sandbox/static/img/sample_map/red_4.jpg',
+  'sandbox/static/img/sample_map/red_5.jpg',
+  ]
+];
 if (!library)
    var library = {};
 
@@ -54,34 +118,29 @@ library.json = {
          .replace(jsonLine, library.json.replacer);
       }
    };
-
 function createMarkup(markup) { return {__html: markup}; };
 
-const DEFAULT_CONFIG = {
-  cHeight: '400',
-  orientation: 'vertical',
-  overlay: false, 
-  posY: 'top',
-  posX: 'left',
-  jewelSpacing: 8,
-  jewelSize: 42,
-  hlColor: '#ff8c00',
-  hlSize: 16,
-};
-
-var App = React.createClass({
+const App = React.createClass({
   getInitialState() {
     return {
-      ...DEFAULT_CONFIG
+      ...DEFAULT_CONFIG,
+      imageSource: 2,
     }
+  },
+  changeImageSource(i) {
+    this.setState({imageSource: i});
   },
   resetDefault() {
     this.setState({...DEFAULT_CONFIG});
   },
-  changeConfig(config, val, e) {
+  changeConfig(source, config, val, e) {
     e.preventDefault();
     let {...newState} = this.state;
-    newState[config] = val;
+    if (source) {
+      newState[source][config] = val;
+    } else {
+      newState[config] = val;
+    }
     this.setState(newState);
   },
   handleTextChange(prop, e) {
@@ -100,14 +159,14 @@ var App = React.createClass({
     newState['hlColor'] = color;
     this.setState(newState);
   },
-  isConfigSet(config, value) {
-    return this.state[config] === value;
+  isConfigSet(source, config, value) {
+    return this.state[source][config] === value;
   },
   filter(state) {
     if (Object(state)) {
       let filteredState = {};
       Object.keys(state).map(function(key) {
-        if (state[key] !== DEFAULT_CONFIG[key]) {
+        if (state[key] !== DEFAULT_CONFIG[key] && !configHide.includes(key)) {
           filteredState[key] = state[key];
         }
       });
@@ -115,83 +174,107 @@ var App = React.createClass({
     };
     return false;
   },
-  buildConfigTable () {
-    let configs = ['cHeight', 'jewelSize', 'jewelSpacing', 'hlColor', 'hlSize'];
+  buildConfigTable (obj) {
+    let configs = ['bkgSize','cHeight'];
     let configTableRows = configs.map(function(config, i) {
-      let value = this.state[config];
+      let value = this.state[obj][config];
       return <tr key={i}>
-        <td>{configTableDescription[config][0]}</td>
+        <td>{configTableDescription[config]}</td>
         <td><input style={{textAlign: 'center'}} type='text' value={value} onChange={this.handleTextChange.bind(null, config)} /></td>
         <td></td>
       </tr>
     }.bind(this));
     return configTableRows;
   },
+  getImageSource() {
+    let type = this.state.imageSource;
+    switch(type) {
+      case 2:
+        return imageMDArray;
+        break;
+      case 1:
+      default:
+        return imageArray;
+    }
+  },
   render() {
     let {orientation, posY} = this.state;
-    let imageArray = [
-      'sandbox/static/img/land0.jpg',
-      'sandbox/static/img/land1.jpg',
-      'sandbox/static/img/land2.jpg',
-      'sandbox/static/img/land3.jpg',
-      'sandbox/static/img/land4.jpg',
-    ];
+
     let codeSectionHeader = {
-      padding: '0 1em'
+      padding: '0 1em',
+      textAlign: 'center'
     };
-    let configTable = this.buildConfigTable();
+    // let galleryConfigTable = this.buildConfigTable();
     let filteredState = this.filter(this.state);
+    let imageSource = this.getImageSource();
+    let secondaryConfig = this.state.imageSource == 2 ?
+          <div style={{float: 'left', width: '100%', justifyContent: 'space-around'}} className='flxbx flxwp'>
+              <h3 style={{width: '100%'}}>Secondary Jewels</h3>
+              <div>
+                <h4>Layout</h4>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'orientation', 'vertical')}>Vertical</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null,  'secondary', 'orientation', 'horizontal')}>Horizontal</button>
+              </div>
+              <div>
+                <h4>Y Axis</h4>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'posY', 'top')}>Top</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'posY', 'bot')}>Bot</button>
+              </div>
+              <div>
+                <h4>X Axis</h4>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'posX', 'left')}>Left</button>
+                <button className={"btn btn-default"+(this.isConfigSet('secondary', 'posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'secondary', 'posX', 'right')}>Right</button>
+              </div>
+          </div>
+                    : null;
     return (
-      <div style={{padding: '1em'}} className='container'>
-      <div style={{width: '100%', textAlign: 'center', fontSize: '5em'}}>React Amazon Gallery</div>
-      <div style={{width: '100%', padding: '1em', height: '50%', display: 'flex', flexWrap: 'wrap', position: 'relative', border: '1px solid grey', borderRadius: 4}}>
-        <div style={{width: '50%', height: '100%'}}>
+      <div style={{padding: '2em'}} className=''>
+      <div style={{width: '100%', textAlign: 'center', fontSize: '2.5em'}}><a href='https://github.com/michaellyons/react-amazon-gallery'>React Amazon Gallery</a></div>
+      <div style={{width: '100%', textAlign: 'center', fontSize: '1em'}}>This is a React JS Component inspired by clean gallery design.</div>
+      <div style={{width: '100%', padding: '1em', height: '40%', display: 'flex', flexWrap: 'wrap', position: 'relative', borderRadius: 4}}>
+        <div className='col-6 col-lg-6 col-sm-6 col-md-6'>
+          <div className='flxbx'>
+            <h4 style={{margin: 'auto 0'}}>One Dimension</h4>
+          </div>
+          <hr />
           <Gallery config={this.state} images={imageArray} />
         </div>
+
         <div className='col-6 col-lg-6 col-sm-6 col-md-6'>
-          <table style={{width: '100%'}}>
-          <thead>
-            <tr><th>Setting</th><th>Value</th><th>Notes</th></tr>
-          </thead>
-          <tbody>
-            {configTable}
-          </tbody>
-          </table>
-          <div>
-            Overlay 
-            <label>
-              <input name='overlay' checked={this.state.overlay ? '' : 'true'} type="checkbox" onClick={this.changeConfig.bind(null, 'overlay', !this.state.overlay)} />
-            </label>
+          <div className='flxbx'>
+            <h4 style={{margin: 'auto 0'}}>Two Dimensions</h4>
           </div>
-          <div style={{float: 'left', width: '100%', justifyContent: 'space-around'}} className='flxbx flxwp'>
-              <div>
-              <h3>Layout</h3>
-              <button className={"btn btn-default"+(this.isConfigSet('orientation', 'vertical') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'vertical')}>Vertical</button>
-              <button className={"btn btn-default"+(this.isConfigSet('orientation', 'horizontal') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'orientation', 'horizontal')}>Horizontal</button>
-              </div>
-              <div>
-                <h3>Y Axis</h3>
-                <button className={"btn btn-default"+(this.isConfigSet('posY', 'top') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'top')}>Top</button>
-                <button className={"btn btn-default"+(this.isConfigSet('posY', 'bot') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posY', 'bot')}>Bot</button>
-              </div>
-              <div>
-                <h3>X Axis</h3>
-                <button className={"btn btn-default"+(this.isConfigSet('posX', 'left') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'left')}>Left</button>
-                <button className={"btn btn-default"+(this.isConfigSet('posX', 'right') ? ' active' : '')} type="submit" onClick={this.changeConfig.bind(null, 'posX', 'right')}>Right</button>
-              </div>
-          </div>
-
-
-          <button style={{position: 'absolute', right: 0, bottom: 0}} className="btn btn-default" type="submit" onClick={this.resetDefault}>Reset Defaults</button>
+          <hr />
+          <Gallery config={this.state} images={imageMDArray} />
       </div>
+        <div style={{width: '40%', textAlign: 'center', margin: '1em auto'}}>
+          <div style={codeSectionHeader}><h4>Installation</h4></div>
+          <pre><code>{"npm install react-amazon-gallery"}</code></pre>
+        </div>
     </div>
-      <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
-        <div style={codeSectionHeader}><h4>Usage</h4></div>
-        <pre><code>{"import React from 'react';"}
-            <br />{"import Gallery from 'react-amazon-gallery';"}</code></pre>
-        <pre><code dangerouslySetInnerHTML={createMarkup('let config = '+library.json.prettyPrint(filteredState)+';')}></code></pre>
-        <pre><code dangerouslySetInnerHTML={createMarkup('let images = '+library.json.prettyPrint(imageArray)+';')}></code></pre>
-        <pre><code>{"<"+"Gallery images={images} "+(Object.keys(filteredState).length > 0 ? 'config={config}' : '')+" />"}</code></pre>
+      <hr />
+      <div style={{padding: ''}} className='container'>
+
+        <form style={{textAlign: 'center', margin: '1em'}} action="https://github.com/michaellyons/react-amazon-gallery">
+            <button className={'button button1'} type="submit" value="View Github Project">View Github Project</button>
+        </form>
+        <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
+          <div style={codeSectionHeader}><h4>Usage</h4></div>
+          <pre><code>{"import React from 'react';"}
+              <br />{"import Gallery from 'react-amazon-gallery';"}
+              <br /><br />{"let images = [-image-array-here-]';"}
+              <br />{"let config = {-config-object-here};"}
+              <br /><br />{"<"+"Gallery images={images} "+(Object.keys(filteredState).length > 0 ? 'config={config}' : '')+" />"}
+              </code></pre>
+          <div style={codeSectionHeader}><h4>1 Dimension Images</h4></div>
+          <pre ><code dangerouslySetInnerHTML={createMarkup('let images1D = '+library.json.prettyPrint(imageArray)+';')}></code></pre>
+          <div style={codeSectionHeader}><h4>2 Dimension Images</h4></div>
+          <pre ><code dangerouslySetInnerHTML={createMarkup('let images2D = '+library.json.prettyPrint(imageMDArray)+';')}></code></pre>
+        </div>
+        <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
+          <div style={codeSectionHeader}><h4>Customization</h4></div>
+          <pre ><code dangerouslySetInnerHTML={createMarkup('let default_config = '+library.json.prettyPrint(DEFAULT_CONFIG)+';')}></code></pre>
+        </div>
       </div>
     </div>
     );
