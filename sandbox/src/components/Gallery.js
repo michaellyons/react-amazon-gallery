@@ -1,5 +1,6 @@
 import React from 'react';
 import GalleryBox from './GalleryBox';
+
 let DEFAULTS = {
 	bkgSize: 'cover',
 	containerHeight: false,
@@ -28,13 +29,7 @@ let DEFAULTS = {
 		posY: 'bot'
 	}
 };
-function isOfType (type, test) {
-	if (Array.isArray(test)) {
-		return type == 'array';
-	} else {
-		return typeof test === type;
-	}
-};
+
 const Gallery = React.createClass({
 	getInitialState() {
 		return {main: 0, secondary: 0};
@@ -319,7 +314,7 @@ const Gallery = React.createClass({
 
 		let imageLoc = this.getGalleryImage();
 		let galleryMain = {
-			height: this.getConfig('gallery', 'cHeight')+'px',
+			height: this.getConfig('containerHeight')+'px',
 			width: '100%',
 			backgroundImage: "url('"+imageLoc+"')",
 			backgroundSize: this.getConfig('gallery', 'bkgSize') || 'contain',
