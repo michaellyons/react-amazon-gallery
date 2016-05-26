@@ -1,24 +1,28 @@
-
 #React Amazon Gallery
+This is a React JS Component inspired by clean gallery design.
+
 [![npm package](https://img.shields.io/npm/v/react-amazon-gallery.svg?style=flat-square)](https://www.npmjs.org/package/react-amazon-gallery)
 
 [![PeerDependencies](https://img.shields.io/david/peer/michaellyons/react-amazon-gallery.svg?style=flat-square)](https://david-dm.org/michaellyons/react-amazon-gallery#info=peerDependencies&view=list)
 [![Dependencies](https://img.shields.io/david/michaellyons/react-amazon-gallery.svg?style=flat-square)](https://david-dm.org/michaellyons/react-amazon-gallery)
 [![DevDependencies](https://img.shields.io/david/dev/michaellyons/react-amazon-gallery.svg?style=flat-square)](https://david-dm.org/michaellyons/react-amazon-gallery#info=devDependencies&view=list)
 
-This is a React JS Component inspired by clean gallery design.
+###Demo Display Website
+[rag.js.org](https://rag.js.org)
 
 ###Sample Screencap
 ![Image of Gallery]
 (http://i.imgur.com/CHVrtc3.jpg)
 
 ###Current Capabilities
-1. List Gallery View
+1. 1-Dimensional Gallery View
   * Renders a one dimensional array of image src strings.
+2. 2-Dimensional Gallery View
+  * Allows for clean browsing experience of product variations and similar perspective combinations which would look terrible in a grid.
+
 
 ###Future Capabilities
-1. Variation Gallery View
-  * Allows for clean browsing experience of product variations and similar perspective combinations which would look terrible in a grid.
+1. 2-D Gallery View
   * Should have injectable image array option to render flavor options in custom/external div
 
 ## Prerequisites
@@ -69,7 +73,8 @@ The component has a Config prop that may be passed an object with these keys:
 
 Key | Type | Description
 ----- | ----- | -----
-cHeight | Integer/String | If set, this will override the Gallery's height from 100% to the pixels indicated
+containerHeight | Integer/String | If set, this will override the Gallery's height from 350 to the pixels indicated
+containerWidth | Integer/String | If set, this will override the Gallery's height from 100% to the pixels indicated
 orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
 overlay | Boolean | If set, the image thumbnails will not be given gutter padding
 posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned
