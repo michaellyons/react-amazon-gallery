@@ -1,35 +1,75 @@
 import React from 'react';
 import GalleryBox from './GalleryBox';
+
 let DEFAULTS = {
-	containerHeight: false,
-	containerWidth: false,
+	bkgSize: 'contain',
+	containerHeight: '350',
+	containerWidth: '100%',
 	fullSize: false,
-	hlColor: '#ff8c00',
-	hlSize: 16,
-	jewelSize: 40,
-	jewelSpacing: 16,
-	orientation: 'vertical',
-	overlay: false,
-	posX: 'left',
-	posY: 'top'
+	injectJewelB: false,
+	injectionIdentifier: null,
+	main: {
+		overlay: false,
+		hlColor: '#ff8c00',
+		hlSize: 16,
+		jewelSize: 40,
+		jewelSpacing: 8,
+		orientation: 'vertical',
+		posX: 'left',
+		posY: 'top'
+	},
+	secondary: {
+		overlay: false,
+		hlColor: '#ff8c00',
+		hlSize: 16,
+		jewelSize: 40,
+		jewelSpacing: 8,
+		orientation: 'horizontal',
+		posX: 'left',
+		posY: 'bot'
+	}
 };
+
 const Gallery = React.createClass({
 	getInitialState() {
-		return {index: 0};
+		return {main: 0, secondary: 0};
 	},
-	handleEnter(i) {
-		this.setState({index: i});
+	handleEnter(i, place) {
+		let spot = place === 'secondary' ? 'secondary' : 'main';
+		let {...newState} = this.state;
+		newState[spot] = i;
+		this.setState(newState);
 	},
-	getConfig(params) {
+	changesecondary(i) {
+		this.setState({secondary: i});
+	},
+	getGalleryType() {
+		let {images} = this.props;
+		let galleryType;
+		if (Array.isArray(images)) {
+			if (images.every(i => Array.isArray(i))) {
+				galleryType = 2;
+			} else if (images.every(i => typeof i === 'string')) {
+				galleryType = 1;
+			} else {
+				galleryType = 0;
+			}
+		} else {
+			galleryType = 3;
+		}
+		return galleryType;
+	},
+	getConfig(place, params) {
 		if (params === null || !params) return false;
 		let {config} = this.props;
 		let setConfig = {};
+		let configPlace = place ? config[place] ? config[place] : DEFAULTS[place] : DEFAULTS;
 		// Check datatype of params passed, collect config based on type
 		if (Array.isArray(params)) {
-			if (config) {
+			if (configPlace) {
 				params.map(function(param) {
-					if (config[param]) {
-						setConfig[param] = config[param];
+					if (configPlace[param]) {
+						setConfig[param] = configPlace[param];
 					} else {
 						setConfig[param] = DEFAULTS[param];
 					}
@@ -42,16 +82,16 @@ const Gallery = React.createClass({
 				});
 			}
 		} else if (typeof params === 'string') {
-			if (config) {
-				setConfig = config[params];
+			if (configPlace[params]) {
+				setConfig = configPlace[params];
 			} else {
 				setConfig = DEFAULTS[params];
 			}
 		} else if (typeof params === 'object') {
 			if (config) {
 				Object.keys(params).map(function(param) {
-					if (config[param]) {
-						setConfig[param] = config[param];
+					if (configPlace[param]) {
+						setConfig[param] = configPlace[param];
 					} else {
 						setConfig[param] = DEFAULTS[param];
 					}
@@ -69,167 +109,234 @@ const Gallery = React.createClass({
 
 		return setConfig;
 	},
-	getItemLayout() {
-		let orientation = this.getConfig('orientation');
-		let style;
-		switch (orientation) {
-			case 'vertical':
-				style = {
-					mainContainer: {
+	getConfigObject(obj) {
+		if (!DEFAULTS[obj]) return false;
+		let {config} = this.props;
 
-					},
-					jewel: {
+		let configObj = {};
+		Object.keys(DEFAULTS[obj]).map(function(key) {
+			configObj[key] = config[obj][key] ? config[obj][key] : DEFAULTS[obj][key];
+		});
+		return configObj;
+	},
+	buildJewelStyle(place) {
+		if (!place) return DEFAULTS.main;
 
-					}
-				};
-				break;
-			case 'horizontal':
-				style = {
-					mainContainer: {
-					  
-					},
-					jewel: {
-					  float: 'left'
-					}
-				};
-				break;
-			default:
-				style = {
-					mainContainer: {
-						
-					},
-					jewel: {
-					}
-				}
-		}
-		return this.getOrientation(style);
-	},
-	getOrientation(style) {
-		return this.getOrientationY(this.getOrientationX(style));
-	},
-	getOrientationX(style) {
-		let posX = this.getConfig('posX');
-		switch (posX) {
-			case 'right':
-				style = {
-					...style,
-					jewelContainer: {
-						position: 'absolute',
-						right: 0,
-						...style.jewelContainer
-					}					
-				};
-				break;
-			case 'left':
-			default:
-				style = {
-				...style,
-					jewelContainer: {
-						position: 'absolute',
-						bottom: 0,
-						...style.jewelContainer
-					}
-				};
-		}
-		return style;
-	},
-	getOrientationY(style) {
-		let posY = this.getConfig('posY');
-		switch (posY) {
-			case 'top':
-				style = {
-					...style,
-					jewelContainer: {
-						position: 'absolute',
-						top: 0,
-						...style.jewelContainer
-					},  					
-				};
-				break;
-			case 'bot':
-			default:
-				style = {
-				...style,
-					jewelContainer: {
-						position: 'absolute',
-						bottom: 0,
-						...style.jewelContainer
-					}
-				};
-		}
-		return style;
-	},
-	buildJewelStyle() {
-		let config = this.getConfig(['hlSize', 'hlColor', 'jewelSize', 'jewelSpacing']);
+		let configObj = this.getConfigObject(place);
 		let style = {
-			size: config.jewelSize ? (config.jewelSize) : 40,
-			hlColor: config.hlColor ? config.hlColor : 'darkorange',
-			hlSize: config.hlSize ? config.hlSize : 15,
-			spacing: config.jewelSpacing ? config.jewelSpacing : 0,
+			container: {
+				float: configObj.orientation === 'horizontal' ? 'left' : '',
+				zIndex: 900
+			},
+			jewel: {
+				size: configObj.jewelSize,
+				hlSize: configObj.hlSize,
+				hlColor: configObj.hlColor,
+				spacing: configObj.jewelSpacing
+			}
 		};
 		return style;
 	},
-	buildContainerStyle() {
-		let config = this.getConfig(['overlay', 'hlSize', 'posY', 'posX','orientation', 'jewelSize']);
+	buildJewelContainerStyle(kind) {
+
+		let configObj = this.getConfigObject(kind);
+
+		let verticalStyle = configObj.posY === 'top' ?
+			{ top: 0 } : { bottom: 0 };
+
+		let horizontalStyle = configObj.posX === 'left' ?
+			{ left: 0 } : { right: 0 };
+
+		let style = {
+			position: 'absolute',
+			...verticalStyle,
+			...horizontalStyle
+		};
+		return style;
+	},
+	buildContainerStyle(kind) {
+		let containerConfig = this.getConfig(null, ['overlay', 'containerWidth', 'containerHeight', 'bkgSize']);
+		
+		let mainConfig = this.getConfigObject('main');
+		let secondaryConfig = this.getConfigObject('secondary');
+
+		let mainPaddingSize = parseInt(mainConfig.jewelSize) + parseInt(mainConfig.hlSize)/2 + 4;
+		let secondaryPaddingSize = parseInt(secondaryConfig.jewelSize) + parseInt(secondaryConfig.hlSize)/2 + 4;
+		
+
+		let padding = {
+			left: 0,
+			right: 0,
+			bottom: 0,
+			top: 0
+		};
+
+		let gallType = this.getGalleryType();
+		switch(gallType) {
+			case 2:
+				if (!mainConfig.overlay) {
+					if (!secondaryConfig.overlay) {
+						// First check if main Config is Horizontal
+						if (mainConfig.orientation === 'horizontal') {
+							if (mainConfig.posY === 'top') {
+								padding.top += mainPaddingSize;
+							} else {
+								padding.bottom += mainPaddingSize;
+							}
+							if (secondaryConfig.orientation === 'horizontal') {
+								if (secondaryConfig.posY === 'top') {
+									padding.top += mainPaddingSize;
+								} else {
+									padding.bottom += mainPaddingSize;
+								}
+							} else {
+								if (secondaryConfig.posX === 'left') {
+									padding.left += mainPaddingSize;
+								} else {
+									padding.right += mainPaddingSize;
+								}
+							}
+						} else {
+							if (mainConfig.posX === 'left') {
+								padding.left += mainPaddingSize;
+							} else {
+								padding.right += mainPaddingSize;
+							}
+							if (secondaryConfig.orientation === 'vertical') {
+								if (secondaryConfig.posX === 'top') {
+									padding.top += mainPaddingSize;
+								} else {
+									padding.bottom += mainPaddingSize;
+								}
+							} else {
+								if (secondaryConfig.posY === 'top') {
+									padding.top += mainPaddingSize;
+								} else {
+									padding.bottom += mainPaddingSize;
+								}
+							}
+						}
+					} else {  
+						// If we're here, then Main Overlay is true AND secondary Overlay is true
+						// So do nothing, all Padding is already set to Zero
+					}
+				}
+				break;
+			case 1:
+			default:
+				if (!mainConfig.overlay) {
+					if (mainConfig.orientation === 'horizontal') {
+						if (mainConfig.posY === 'top') {
+							padding.top += mainPaddingSize;
+						} else {
+							padding.bottom += mainPaddingSize;
+						}
+					} else {
+						if (mainConfig.posX === 'left') {
+							padding.left += mainPaddingSize;
+						} else {
+							padding.right += mainPaddingSize;
+						}
+					}
+				}
+		};
+
 		let containerStyle = {};
-		let paddingSize = parseInt(config.jewelSize) + parseInt(config.hlSize)/2 + 4 + 'px';
-		if (config.overlay) {
-			containerStyle = {
-			  padding: '0px'
-			}
-		} else {
-			let derPadding;
-			if (config.orientation === 'horizontal') {
-				if (config.posY === 'top') {
-					derPadding = paddingSize+' 0 0 0';
-				} else {
-					derPadding = '0 0 '+paddingSize+' 0';
-				}
-			} else {
-				if (config.posX === 'right') {
-					derPadding = '0 '+paddingSize+' 0 0';
-				} else {
-					derPadding = '0 0 0 '+paddingSize;
-				}
-			}
-			containerStyle = {
-				padding: derPadding
-			};
-		}
+
+		let derPadding = padding.top+'px '+padding.right+'px '+padding.bottom+'px '+padding.left+'px';
+
+		containerStyle = {
+			padding: derPadding
+		};
+
 		return containerStyle;
 	},
-	render() {
-		let {style, images, jewelSize} = this.props;
-		let imageLoc = images[this.state.index];
-		let itemlayout = this.getItemLayout();
 
+	buildJewels() {
+		let jewelContainers = {};
+		let gallType = this.getGalleryType();
+		if (Array.isArray(this.props.images)) {
+			switch(gallType) {
+				case 2:
+					jewelContainers = this.buildDualArray(this.props.images);
+					break;
+				case 1:
+				default:
+					jewelContainers = [this.buildSingleArray(this.props.images, 'main'), null];
+			}
+		}
+		return jewelContainers;
+	},
+	buildDualArray(images) {
+		let mainArray, secondaryArray;
+		let {main, secondary} = this.state;
+		secondaryArray = images.map(function(imgArray, i) {
+			if (i == secondary) {
+				mainArray = this.buildSingleArray(imgArray, 'main');
+			}
+			return this.buildJewel(imgArray[0], i, 'secondary');
+		}.bind(this));
+		return [mainArray, secondaryArray]
+	},
+	buildSingleArray(images, place) {
+		let imageJewels = images.length > 0 ? images.map(function(img, i) {
+			let imgLocation = images[i];
+			return this.buildJewel(img, i, place);
+		}.bind(this)) : null;
+		return imageJewels;
+	},
+	buildJewel(img, i, place) {
+		let jewelStyle = this.buildJewelStyle(place);
+			return <div style={jewelStyle.container} onMouseEnter={this.handleEnter.bind(null, i, place)} key={place+''+i}>
+						<GalleryBox config={jewelStyle.jewel} orientation={this.getConfig(place, 'orientation')} index={this.state[place]} spot={i} place={place} img={img} />
+					</div>
+	},
+	injectArray() {
+
+	},
+	getGalleryImage() {
+		let {main, secondary} = this.state;
+		let {images} = this.props;
+		let kind = this.getGalleryType();
+		switch(kind) {
+			case 2:
+				return images[secondary][main];
+				break;
+			case 1:
+			default:
+				return images[main];
+		};
+	},
+	render() {
+		if (!Array.isArray(this.props.images)) return <div style={{width: '100%',height: '100%', display: 'flex'}}><div style={{margin: 'auto'}}>No Images</div></div>;
+		
+		let {style, jewelContainerStyle, jewelSecondaryContainerStyle, galleryStyle, images, jewelSize} = this.props;
+
+		let imageLoc = this.getGalleryImage();
 		let galleryMain = {
-			height: this.getConfig('cHeight')+'px',
-			width: '100%',
+			height: this.getConfig(null, 'containerHeight'),
+			width: this.getConfig(null, 'containerWidth'),
 			backgroundImage: "url('"+imageLoc+"')",
-			backgroundSize: 'contain',
+			backgroundSize: this.getConfig(null, 'bkgSize') || 'contain',
 			backgroundRepeat: 'no-repeat',
 			backgroundPosition: 'center',
 		};
+		let jewelMainContainer = this.buildJewelContainerStyle('main');
+		let jewelSecondaryContainer = this.buildJewelContainerStyle('secondary');
+		let jewels = this.buildJewels();
+		let jewelSet = Array.isArray(jewels[0]) ? jewels[0] : jewels;
+		let jewelSecondarySet = Array.isArray(jewels[1]) ? <div style={{...jewelSecondaryContainer, ...jewelSecondaryContainerStyle}}>{jewels[1]}</div> : null;
 
-		let jewelStyle = this.buildJewelStyle();
-		let imageJewels = images.length > 0 ? images.map(function(img, i) {
-			let n = i;
-			let imgLocation = images[i];
-
-			return <div style={itemlayout.jewel} onMouseEnter={this.handleEnter.bind(null, n)} key={i}>
-					<GalleryBox config={jewelStyle} orientation={this.getConfig('orientation')} index={this.state.index} place={i} img={img} />
-					</div>
-		}.bind(this)) : null;
 		let containerStyle = this.buildContainerStyle();
 		return (
-			<div style={{position: 'relative'}}>
+			<div style={{position: 'relative', height: '100%', width: '100%', ...style}}>
 				<div style={{...containerStyle, position: 'relative', width: '100%', height: '100%'}}>
-					<div style={galleryMain} ref="section" />
+					<div style={{...galleryMain, ...galleryStyle}} ref="section" />
 				</div>
-				<div style={itemlayout.jewelContainer}>
-					{imageJewels}
+				<div style={{...jewelMainContainer, ...jewelContainerStyle}}>
+					{jewelSet}
 				</div>
+				{jewelSecondarySet}
 			</div>
 		);
 	}

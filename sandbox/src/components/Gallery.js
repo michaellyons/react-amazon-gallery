@@ -2,9 +2,9 @@ import React from 'react';
 import GalleryBox from './GalleryBox';
 
 let DEFAULTS = {
-	bkgSize: 'cover',
-	containerHeight: false,
-	containerWidth: false,
+	bkgSize: 'contain',
+	containerHeight: '350',
+	containerWidth: '100%',
 	fullSize: false,
 	injectJewelB: false,
 	injectionIdentifier: null,
@@ -314,10 +314,10 @@ const Gallery = React.createClass({
 
 		let imageLoc = this.getGalleryImage();
 		let galleryMain = {
-			height: this.getConfig('containerHeight')+'px',
-			width: '100%',
+			height: this.getConfig(null, 'containerHeight'),
+			width: this.getConfig(null, 'containerWidth'),
 			backgroundImage: "url('"+imageLoc+"')",
-			backgroundSize: this.getConfig('gallery', 'bkgSize') || 'contain',
+			backgroundSize: this.getConfig(null, 'bkgSize') || 'contain',
 			backgroundRepeat: 'no-repeat',
 			backgroundPosition: 'center',
 		};
@@ -329,7 +329,7 @@ const Gallery = React.createClass({
 
 		let containerStyle = this.buildContainerStyle();
 		return (
-			<div style={{position: 'relative', ...style}}>
+			<div style={{position: 'relative', height: '100%', width: '100%', ...style}}>
 				<div style={{...containerStyle, position: 'relative', width: '100%', height: '100%'}}>
 					<div style={{...galleryMain, ...galleryStyle}} ref="section" />
 				</div>

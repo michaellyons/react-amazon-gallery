@@ -1,6 +1,7 @@
 import React from 'react';
 import PubGallery from 'react-amazon-gallery';
 import WorkingGallery from './Gallery';
+import Extendo from './ExtendoBox';
 const configTableDescription = {
   bkgSize: 'Background Size',
   cHeight: 'Container Height',
@@ -14,11 +15,12 @@ const configTableDescription = {
   hlSize: 'Hightlight Size'
 };
 const DEFAULT_CONFIG = {
-  gallery: {
-    bkgSize: 'contain',
-    cHeight: 400,
-    overlay: false,
-  },
+  bkgSize: 'cover',
+  containerHeight: '300',
+  containerWidth: '100%',
+  fullSize: false,
+  injectJewelB: false,
+  injectionIdentifier: null,
   main: {
     posY: 'top',
     posX: 'left',
@@ -180,9 +182,10 @@ const App = React.createClass({
     let {orientation, posY} = this.state;
 
     let codeSectionHeader = {
-      padding: '0 1em'
+      padding: '0 1em',
+      textAlign: 'center'
     };
-    let galleryConfigTable = this.buildConfigTable('gallery');
+    // let galleryConfigTable = this.buildConfigTable();
     let filteredState = this.filter(this.state);
     let imageSource = this.getImageSource();
     let secondaryConfig = this.state.imageSource == 2 ?
@@ -206,41 +209,54 @@ const App = React.createClass({
           </div>
                     : null;
     return (
-      <div style={{padding: '2em'}} className='container'>
+      <div style={{padding: '2em'}} className=''>
 
       <div style={{width: '100%', textAlign: 'center', fontSize: '2.5em'}}><a href='https://github.com/michaellyons/react-amazon-gallery'>React Amazon Gallery</a></div>
-      <div style={{width: '100%', justifyContent: 'center', display: 'flex', padding: '1em'}}>
-        <button onClick={this.changeImageSource.bind(null, 1)} className={'button '+(this.state.imageSource == 1 ? 'button1' : 'button2')}>1 Dimension</button>
-        <button onClick={this.changeImageSource.bind(null, 2)} className={'button '+(this.state.imageSource == 2 ? 'button1' : 'button2')}>2 Dimensions</button>
-      </div>
+      <div style={{width: '100%', textAlign: 'center', fontSize: '1em'}}>This is a React JS Component inspired by clean gallery design.</div>
       <div style={{width: '100%', padding: '1em', height: '40%', display: 'flex', flexWrap: 'wrap', position: 'relative', borderRadius: 4}}>
         <div className='col-6 col-lg-6 col-sm-6 col-md-6'>
+          <div className='flxbx'>
+            <h4 style={{margin: 'auto 0'}}>One Dimension</h4>
+          </div>
+          <hr />
           <WorkingGallery config={this.state} images={imageArray} />
         </div>
 
         <div className='col-6 col-lg-6 col-sm-6 col-md-6'>
+          <div className='flxbx'>
+            <h4 style={{margin: 'auto 0'}}>Two Dimensions</h4>
+          </div>
+          <hr />
           <WorkingGallery config={this.state} images={imageMDArray} />
-
-          <button style={{position: 'absolute', right: 0, bottom: 0}} className="btn btn-default" type="submit" onClick={this.resetDefault}>Reset Defaults</button>
       </div>
+        <div style={{width: '40%', textAlign: 'center', margin: '1em auto'}}>
+          <div style={codeSectionHeader}><h4>Installation</h4></div>
+          <pre><code>{"npm install react-amazon-gallery"}</code></pre>
+        </div>
     </div>
       <hr />
-       <form style={{textAlign: 'center', margin: '1em'}} action="https://github.com/michaellyons/react-amazon-gallery">
-          <button className={'button button1'} type="submit" value="View Github Project">View Github Project</button>
-      </form>
-      <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
-        <div style={codeSectionHeader}><h4>Usage</h4></div>
-        <pre><code>{"import React from 'react';"}
-            <br />{"import Gallery from 'react-amazon-gallery';"}</code></pre>
-        <pre><code dangerouslySetInnerHTML={createMarkup('let config = '+library.json.prettyPrint(filteredState)+';')}></code></pre>
-        <pre><code dangerouslySetInnerHTML={createMarkup('let images = '+library.json.prettyPrint(imageSource)+';')}></code></pre>
-        <pre><code>{"<"+"Gallery images={images} "+(Object.keys(filteredState).length > 0 ? 'config={config}' : '')+" />"}</code></pre>
-      </div>
-      <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
-        <div style={codeSectionHeader}><h4>Prerequisites</h4></div>
-        <div>Use <a href='http://www.npmjs.org'>NPM</a> for package bundling and <a href='http://facebook.github.io/react/'>React JS</a></div>
-        <div style={codeSectionHeader}><h4>Installation</h4></div>
-        <pre><code>{"npm install react-amazon-gallery"}</code></pre>
+      <div style={{padding: ''}} className='container'>
+
+        <form style={{textAlign: 'center', margin: '1em'}} action="https://github.com/michaellyons/react-amazon-gallery">
+            <button className={'button button1'} type="submit" value="View Github Project">View Github Project</button>
+        </form>
+        <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
+          <div style={codeSectionHeader}><h4>Usage</h4></div>
+          <pre><code>{"import React from 'react';"}
+              <br />{"import Gallery from 'react-amazon-gallery';"}
+              <br /><br />{"let images = [-image-array-here-]';"}
+              <br />{"let config = {-config-object-here};"}
+              <br /><br />{"<"+"Gallery images={images} "+(Object.keys(filteredState).length > 0 ? 'config={config}' : '')+" />"}
+              </code></pre>
+          <div style={codeSectionHeader}><h4>1 Dimension Images</h4></div>
+          <pre ><code dangerouslySetInnerHTML={createMarkup('let images1D = '+library.json.prettyPrint(imageArray)+';')}></code></pre>
+          <div style={codeSectionHeader}><h4>2 Dimension Images</h4></div>
+          <pre ><code dangerouslySetInnerHTML={createMarkup('let images2D = '+library.json.prettyPrint(imageMDArray)+';')}></code></pre>
+        </div>
+        <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
+          <div style={codeSectionHeader}><h4>Customization</h4></div>
+          <pre ><code dangerouslySetInnerHTML={createMarkup('let default_config = '+library.json.prettyPrint(DEFAULT_CONFIG)+';')}></code></pre>
+        </div>
       </div>
     </div>
     );
@@ -276,3 +292,11 @@ export default App;
           //     </div>
           // </div>
           // {secondaryConfig}
+      // <div style={{width: '100%', justifyContent: 'center', display: 'flex', padding: '1em'}}>
+      //   <button onClick={this.changeImageSource.bind(null, 1)} className={'button '+(this.state.imageSource == 1 ? 'button1' : 'button2')}>1 Dimension</button>
+      //   <button onClick={this.changeImageSource.bind(null, 2)} className={'button '+(this.state.imageSource == 2 ? 'button1' : 'button2')}>2 Dimensions</button>
+      // </div>
+
+          //       <div style={codeSectionHeader}><h4>Prerequisites</h4></div>
+          // <div>Use <a href='http://www.npmjs.org'>NPM</a> for package bundling and <a href='http://facebook.github.io/react/'>React JS</a></div>
+
