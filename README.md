@@ -8,7 +8,7 @@ This is a React JS Component inspired by clean gallery design.
 [![DevDependencies](https://img.shields.io/david/dev/michaellyons/react-amazon-gallery.svg?style=flat-square)](https://david-dm.org/michaellyons/react-amazon-gallery#info=devDependencies&view=list)
 
 ###Demo Display Website
-[rag.js.org](https://rag.js.org)
+[rag.js.org](http://rag.js.org)
 
 ###Sample Screencap
 ![Image of Gallery]
@@ -73,17 +73,22 @@ The component has a Config prop that may be passed an object with these keys:
 
 Key | Type | Description
 ----- | ----- | -----
+bkgSize | Enum | 'cover', 'contain' Sets gallery image size
 containerHeight | Integer/String | If set, this will override the Gallery's height from 350 to the pixels indicated
 containerWidth | Integer/String | If set, this will override the Gallery's height from 100% to the pixels indicated
-orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
-overlay | Boolean | If set, the image thumbnails will not be given gutter padding
-posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned
-posX | Enum | 'left' or 'right' will shift where the thumbnails are positioned
-jewelSpacing | Integer | Distance between image thumbnails
-jewelSize | Integer | Sets the size of the thumbnails
-hlColor | String | Accepts CSS colors (Hex/Names)
-hlSize | Integer | Sets the size of the thumbnail's highlight glow effect
+main | Obj | Contains the config for the Main Jewel row
+ | orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
+ | overlay | Boolean | If set, the image thumbnails will not be given gutter padding
+ | posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned
+ | posX | Enum | 'left' or 'right' will shift where the thumbnails are positioned
+ | spacing | Integer | Distance between image thumbnails
+ | size | Integer | Sets the size of the thumbnails
+ | hlColor | String | Accepts CSS colors (Hex/Names)
+ | hlSize | Integer | Sets the size of the thumbnail's highlight glow effect
+secondary | Obj | Contains the config for the Main Jewel row
+ | ... | Copy of Main, for Secondary Jewel row display
 
+ 
 ## Sandbox
 
 There is a sandbox app that you can look at to get started. It can be found in the [sandbox folder](https://github.com/michaellyons/react-amazon-gallery/tree/master/sandbox). The sandbox uses [webpack](https://webpack.github.io/) for module bundling and building.
