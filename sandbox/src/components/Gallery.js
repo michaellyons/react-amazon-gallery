@@ -3,8 +3,8 @@ import GalleryBox from './GalleryBox';
 
 let DEFAULTS = {
 	bkgSize: 'contain',
-	containerHeight: '350',
-	containerWidth: '100%',
+	height: '350px',
+	width: '100%',
 	fullSize: false,
 	injectJewelB: false,
 	injectionIdentifier: null,
@@ -155,7 +155,7 @@ const Gallery = React.createClass({
 		return style;
 	},
 	buildContainerStyle(kind) {
-		let containerConfig = this.getConfig(null, ['overlay', 'containerWidth', 'containerHeight', 'bkgSize']);
+		let containerConfig = this.getConfig(null, ['overlay', 'width', 'height', 'bkgSize']);
 		
 		let mainConfig = this.getConfigObject('main');
 		let secondaryConfig = this.getConfigObject('secondary');
@@ -314,8 +314,8 @@ const Gallery = React.createClass({
 
 		let imageLoc = this.getGalleryImage();
 		let galleryMain = {
-			height: this.getConfig(null, 'containerHeight'),
-			width: this.getConfig(null, 'containerWidth'),
+			height: this.getConfig(null, 'height'),
+			width: this.getConfig(null, 'width'),
 			backgroundImage: "url('"+imageLoc+"')",
 			backgroundSize: this.getConfig(null, 'bkgSize') || 'contain',
 			backgroundRepeat: 'no-repeat',

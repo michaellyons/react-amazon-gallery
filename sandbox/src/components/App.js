@@ -4,7 +4,8 @@ import WorkingGallery from './Gallery';
 import Extendo from './ExtendoBox';
 const configTableDescription = {
   bkgSize: 'Background Size',
-  cHeight: 'Container Height',
+  height: 'Container Height',
+  width: 'Container Width',
   orientation: 'Orientation',
   overlay: 'Overlay', 
   posY: 'Position Y-Axis',
@@ -16,8 +17,8 @@ const configTableDescription = {
 };
 const DEFAULT_CONFIG = {
   bkgSize: 'cover',
-  containerHeight: '300',
-  containerWidth: '100%',
+  height: '300px',
+  width: '100%',
   fullSize: false,
   injectJewelB: false,
   injectionIdentifier: null,
@@ -156,7 +157,7 @@ const App = React.createClass({
     return false;
   },
   buildConfigTable (obj) {
-    let configs = ['bkgSize','cHeight'];
+    let configs = ['bkgSize','height'];
     let configTableRows = configs.map(function(config, i) {
       let value = this.state[obj][config];
       return <tr key={i}>
@@ -240,7 +241,7 @@ const App = React.createClass({
         <form style={{textAlign: 'center', margin: '1em'}} action="https://github.com/michaellyons/react-amazon-gallery">
             <button className={'button button1'} type="submit" value="View Github Project">View Github Project</button>
         </form>
-        <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
+        <div className='col-6 col-lg-6 col-sm-6 col-md-6'>
           <div style={codeSectionHeader}><h4>Usage</h4></div>
           <pre><code>{"import React from 'react';"}
               <br />{"import Gallery from 'react-amazon-gallery';"}
@@ -253,7 +254,7 @@ const App = React.createClass({
           <div style={codeSectionHeader}><h4>2 Dimension Images</h4></div>
           <pre ><code dangerouslySetInnerHTML={createMarkup('let images2D = '+library.json.prettyPrint(imageMDArray)+';')}></code></pre>
         </div>
-        <div className='col-6 col-lg-6 col-sm-6 col-md-6' style={{padding: 0}}>
+        <div className='col-6 col-lg-6 col-sm-6 col-md-6'>
           <div style={codeSectionHeader}><h4>Customization</h4></div>
           <pre ><code dangerouslySetInnerHTML={createMarkup('let default_config = '+library.json.prettyPrint(DEFAULT_CONFIG)+';')}></code></pre>
         </div>

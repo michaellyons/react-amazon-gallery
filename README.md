@@ -15,14 +15,14 @@ This is a React JS Component inspired by clean gallery design.
 (http://i.imgur.com/CHVrtc3.jpg)
 
 ###Current Capabilities
-1. 1-Dimensional Gallery View
+1. One Dimensional Gallery View
   * Renders a one dimensional array of image src strings.
-2. 2-Dimensional Gallery View
+2. Two Dimensional Gallery View
   * Allows for clean browsing experience of product variations and similar perspective combinations which would look terrible in a grid.
 
 
 ###Future Capabilities
-1. 2-D Gallery View
+1. Custom External Jewel Display
   * Should have injectable image array option to render flavor options in custom/external div
 
 ## Prerequisites
@@ -53,11 +53,11 @@ let imageArray = [
 ];
 
 let config = {
-  orientation: 'horizontal',
-  overlay: true, 
-  posY: 'bot',
-  hlColor: '#ff8c00',
-  hlSize: 16,
+  bkgSize: 'cover',
+  main: {
+    posX: 'left',
+    hlColor: '#fe001a'
+  }
 };
 
 const MyAwesomeReactComponent = () => (
@@ -71,12 +71,12 @@ export default MyAwesomeReactComponent;
 
 The component has a Config prop that may be passed an object with these keys:
 
-Key | Type | Description
------ | ----- | -----
-bkgSize | Enum | 'cover', 'contain' Sets gallery image size
-containerHeight | Integer/String | If set, this will override the Gallery's height from 350 to the pixels indicated
-containerWidth | Integer/String | If set, this will override the Gallery's height from 100% to the pixels indicated
-main | Obj | Contains the config for the Main Jewel row
+Key | | Type | Description
+----- | ----- |  ----- | -----
+bkgSize | |  Enum | 'cover', 'contain' Sets gallery image size
+containerHeight |  | Integer/String | If set, this will override the Gallery's height from 350 to the pixels indicated
+containerWidth |  | Integer/String | If set, this will override the Gallery's height from 100% to the pixels indicated
+main |  | Obj | Contains the config for the Main Jewel row
  | orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
  | overlay | Boolean | If set, the image thumbnails will not be given gutter padding
  | posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned
@@ -85,8 +85,8 @@ main | Obj | Contains the config for the Main Jewel row
  | size | Integer | Sets the size of the thumbnails
  | hlColor | String | Accepts CSS colors (Hex/Names)
  | hlSize | Integer | Sets the size of the thumbnail's highlight glow effect
-secondary | Obj | Contains the config for the Main Jewel row
- | ... | Copy of Main, for Secondary Jewel row display
+secondary | |  Obj | Contains the config for the Main Jewel row
+ | ... | ... | Copy of Main, for Secondary Jewel row display
 
  
 ## Sandbox
