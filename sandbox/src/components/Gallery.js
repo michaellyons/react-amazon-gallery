@@ -3,7 +3,7 @@ import GalleryBox from './GalleryBox';
 
 let DEFAULTS = {
 	bkgSize: 'contain',
-	containerHeight: '350',
+	containerHeight: 350,
 	containerWidth: '100%',
 	fullSize: false,
 	injectJewelB: false,
@@ -12,8 +12,8 @@ let DEFAULTS = {
 		overlay: false,
 		hlColor: '#ff8c00',
 		hlSize: 16,
-		jewelSize: 40,
-		jewelSpacing: 8,
+		size: 40,
+		spacing: 8,
 		orientation: 'vertical',
 		posX: 'left',
 		posY: 'top'
@@ -22,8 +22,8 @@ let DEFAULTS = {
 		overlay: false,
 		hlColor: '#ff8c00',
 		hlSize: 16,
-		jewelSize: 40,
-		jewelSpacing: 8,
+		size: 40,
+		spacing: 8,
 		orientation: 'horizontal',
 		posX: 'left',
 		posY: 'bot'
@@ -115,7 +115,7 @@ const Gallery = React.createClass({
 
 		let configObj = {};
 		Object.keys(DEFAULTS[obj]).map(function(key) {
-			configObj[key] = config[obj][key] ? config[obj][key] : DEFAULTS[obj][key];
+			configObj[key] = config[obj][key] !== undefined ? config[obj][key] : DEFAULTS[obj][key];
 		});
 		return configObj;
 	},
@@ -129,10 +129,10 @@ const Gallery = React.createClass({
 				zIndex: 900
 			},
 			jewel: {
-				size: configObj.jewelSize,
+				size: configObj.size,
 				hlSize: configObj.hlSize,
 				hlColor: configObj.hlColor,
-				spacing: configObj.jewelSpacing
+				spacing: configObj.spacing
 			}
 		};
 		return style;
@@ -154,14 +154,22 @@ const Gallery = React.createClass({
 		};
 		return style;
 	},
+	buildPaddingStyle(padding, config, paddingSize) {
+		if (config.orientation === 'horizontal') {
+			// Orientation for These Jewels is Horizontal, so we care about posY (Top And Bottom)
+
+		} else if ( config.orientation === 'vertical' ) {
+			// Orientation for These Jewels is Vertical, so we care about posX (Left And Right)
+		}
+	},
 	buildContainerStyle(kind) {
 		let containerConfig = this.getConfig(null, ['overlay', 'containerWidth', 'containerHeight', 'bkgSize']);
 		
 		let mainConfig = this.getConfigObject('main');
 		let secondaryConfig = this.getConfigObject('secondary');
 
-		let mainPaddingSize = parseInt(mainConfig.jewelSize) + parseInt(mainConfig.hlSize)/2 + 4;
-		let secondaryPaddingSize = parseInt(secondaryConfig.jewelSize) + parseInt(secondaryConfig.hlSize)/2 + 4;
+		let mainPaddingSize = parseInt(mainConfig.size) + 4;
+		let secondaryPaddingSize = parseInt(secondaryConfig.size) + 4;
 		
 
 		let padding = {
