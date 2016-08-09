@@ -92,17 +92,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var DEFAULTS = {
 		bkgSize: 'contain',
-		containerHeight: '350',
+		containerHeight: 350,
 		containerWidth: '100%',
 		fullSize: false,
 		injectJewelB: false,
 		injectionIdentifier: null,
+		mirror: true,
 		main: {
 			overlay: false,
 			hlColor: '#ff8c00',
 			hlSize: 16,
-			jewelSize: 40,
-			jewelSpacing: 8,
+			size: 40,
+			spacing: 8,
 			orientation: 'vertical',
 			posX: 'left',
 			posY: 'top'
@@ -111,8 +112,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			overlay: false,
 			hlColor: '#ff8c00',
 			hlSize: 16,
-			jewelSize: 40,
-			jewelSpacing: 8,
+			size: 40,
+			spacing: 8,
 			orientation: 'horizontal',
 			posX: 'left',
 			posY: 'bot'
@@ -214,7 +215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			var configObj = {};
 			Object.keys(DEFAULTS[obj]).map(function (key) {
-				configObj[key] = config[obj][key] ? config[obj][key] : DEFAULTS[obj][key];
+				configObj[key] = config[obj][key] !== undefined ? config[obj][key] : DEFAULTS[obj][key];
 			});
 			return configObj;
 		},
@@ -228,10 +229,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					zIndex: 900
 				},
 				jewel: {
-					size: configObj.jewelSize,
+					size: configObj.size,
 					hlSize: configObj.hlSize,
 					hlColor: configObj.hlColor,
-					spacing: configObj.jewelSpacing
+					spacing: configObj.spacing
 				}
 			};
 			return style;
@@ -249,14 +250,33 @@ return /******/ (function(modules) { // webpackBootstrap
 			}, verticalStyle, horizontalStyle);
 			return style;
 		},
+		buildPaddingStyle: function buildPaddingStyle(padding, config, paddingSize) {
+			if (!config.overlay) {
+				if (config.orientation === 'horizontal') {
+					// Orientation for These Jewels is Horizontal, so we care about posY (Top And Bottom)
+					if (config.posY === 'top') {
+						padding.top += paddingSize;
+					} else {
+						padding.bottom += paddingSize;
+					}
+				} else if (config.orientation === 'vertical') {
+					// Orientation for These Jewels is Vertical, so we care about posX (Left And Right)
+					if (config.posX === 'left') {
+						padding.left += paddingSize;
+					} else {
+						padding.right += paddingSize;
+					}
+				}
+			}
+			return padding;
+		},
 		buildContainerStyle: function buildContainerStyle(kind) {
-			var containerConfig = this.getConfig(null, ['overlay', 'containerWidth', 'containerHeight', 'bkgSize']);
 
 			var mainConfig = this.getConfigObject('main');
 			var secondaryConfig = this.getConfigObject('secondary');
 
-			var mainPaddingSize = parseInt(mainConfig.jewelSize) + parseInt(mainConfig.hlSize) / 2 + 4;
-			var secondaryPaddingSize = parseInt(secondaryConfig.jewelSize) + parseInt(secondaryConfig.hlSize) / 2 + 4;
+			var mainPaddingSize = parseInt(mainConfig.size) + parseInt(mainConfig.spacing) + 4;
+			var secondaryPaddingSize = parseInt(secondaryConfig.size) + parseInt(secondaryConfig.spacing) + 4;
 
 			var padding = {
 				left: 0,
@@ -268,71 +288,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			var gallType = this.getGalleryType();
 			switch (gallType) {
 				case 2:
-					if (!mainConfig.overlay) {
-						if (!secondaryConfig.overlay) {
-							// First check if main Config is Horizontal
-							if (mainConfig.orientation === 'horizontal') {
-								if (mainConfig.posY === 'top') {
-									padding.top += mainPaddingSize;
-								} else {
-									padding.bottom += mainPaddingSize;
-								}
-								if (secondaryConfig.orientation === 'horizontal') {
-									if (secondaryConfig.posY === 'top') {
-										padding.top += mainPaddingSize;
-									} else {
-										padding.bottom += mainPaddingSize;
-									}
-								} else {
-									if (secondaryConfig.posX === 'left') {
-										padding.left += mainPaddingSize;
-									} else {
-										padding.right += mainPaddingSize;
-									}
-								}
-							} else {
-								if (mainConfig.posX === 'left') {
-									padding.left += mainPaddingSize;
-								} else {
-									padding.right += mainPaddingSize;
-								}
-								if (secondaryConfig.orientation === 'vertical') {
-									if (secondaryConfig.posX === 'top') {
-										padding.top += mainPaddingSize;
-									} else {
-										padding.bottom += mainPaddingSize;
-									}
-								} else {
-									if (secondaryConfig.posY === 'top') {
-										padding.top += mainPaddingSize;
-									} else {
-										padding.bottom += mainPaddingSize;
-									}
-								}
-							}
-						} else {
-							// If we're here, then Main Overlay is true AND secondary Overlay is true
-							// So do nothing, all Padding is already set to Zero
-						}
-					}
+					padding = this.buildPaddingStyle(padding, mainConfig, mainPaddingSize);
+					padding = this.buildPaddingStyle(padding, secondaryConfig, secondaryPaddingSize);
 					break;
 				case 1:
 				default:
-					if (!mainConfig.overlay) {
-						if (mainConfig.orientation === 'horizontal') {
-							if (mainConfig.posY === 'top') {
-								padding.top += mainPaddingSize;
-							} else {
-								padding.bottom += mainPaddingSize;
-							}
-						} else {
-							if (mainConfig.posX === 'left') {
-								padding.left += mainPaddingSize;
-							} else {
-								padding.right += mainPaddingSize;
-							}
-						}
-					}
+					padding = this.buildPaddingStyle(padding, mainConfig, mainPaddingSize);
 			};
 
 			var containerStyle = {};
@@ -429,8 +390,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			var imageLoc = this.getGalleryImage();
 			var galleryMain = {
-				height: this.getConfig(null, 'containerHeight'),
-				width: this.getConfig(null, 'containerWidth'),
+				height: this.getConfig(null, 'height'),
+				width: this.getConfig(null, 'width'),
 				backgroundImage: "url('" + imageLoc + "')",
 				backgroundSize: this.getConfig(null, 'bkgSize') || 'contain',
 				backgroundRepeat: 'no-repeat',
