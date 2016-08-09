@@ -274,8 +274,8 @@ const Gallery = React.createClass({
 
 		let imageLoc = this.getGalleryImage();
 		let galleryMain = {
-			height: this.getConfig(null, 'height'),
-			width: this.getConfig(null, 'width'),
+			height: this.getConfig(null, 'containerHeight'),
+			width: this.getConfig(null, 'containerWidth'),
 			backgroundImage: "url('"+imageLoc+"')",
 			backgroundSize: this.getConfig(null, 'bkgSize') || 'contain',
 			backgroundRepeat: 'no-repeat',
