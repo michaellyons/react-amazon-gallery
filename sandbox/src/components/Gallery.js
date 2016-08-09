@@ -8,6 +8,7 @@ let DEFAULTS = {
 	fullSize: false,
 	injectJewelB: false,
 	injectionIdentifier: null,
+	mirror: true,
 	main: {
 		overlay: false,
 		hlColor: '#ff8c00',
@@ -155,22 +156,32 @@ const Gallery = React.createClass({
 		return style;
 	},
 	buildPaddingStyle(padding, config, paddingSize) {
-		if (config.orientation === 'horizontal') {
-			// Orientation for These Jewels is Horizontal, so we care about posY (Top And Bottom)
-
-		} else if ( config.orientation === 'vertical' ) {
-			// Orientation for These Jewels is Vertical, so we care about posX (Left And Right)
+		if (!config.overlay) {
+			if (config.orientation === 'horizontal') {
+				// Orientation for These Jewels is Horizontal, so we care about posY (Top And Bottom)
+				if (config.posY === 'top') {
+					padding.top +=  paddingSize;
+				} else {
+					padding.bottom +=  paddingSize;
+				}
+			} else if ( config.orientation === 'vertical' ) {
+				// Orientation for These Jewels is Vertical, so we care about posX (Left And Right)
+				if (config.posX === 'left') {
+					padding.left += paddingSize;
+				} else {
+					padding.right += paddingSize;
+				}
+			}
 		}
+		return padding;
 	},
 	buildContainerStyle(kind) {
-		let containerConfig = this.getConfig(null, ['overlay', 'containerWidth', 'containerHeight', 'bkgSize']);
-		
+
 		let mainConfig = this.getConfigObject('main');
 		let secondaryConfig = this.getConfigObject('secondary');
 
-		let mainPaddingSize = parseInt(mainConfig.size) + 4;
-		let secondaryPaddingSize = parseInt(secondaryConfig.size) + 4;
-		
+		let mainPaddingSize = parseInt(mainConfig.size) + parseInt(mainConfig.spacing) + 4;
+		let secondaryPaddingSize = parseInt(secondaryConfig.size) + parseInt(secondaryConfig.spacing) + 4;
 
 		let padding = {
 			left: 0,
@@ -182,71 +193,12 @@ const Gallery = React.createClass({
 		let gallType = this.getGalleryType();
 		switch(gallType) {
 			case 2:
-				if (!mainConfig.overlay) {
-					if (!secondaryConfig.overlay) {
-						// First check if main Config is Horizontal
-						if (mainConfig.orientation === 'horizontal') {
-							if (mainConfig.posY === 'top') {
-								padding.top += mainPaddingSize;
-							} else {
-								padding.bottom += mainPaddingSize;
-							}
-							if (secondaryConfig.orientation === 'horizontal') {
-								if (secondaryConfig.posY === 'top') {
-									padding.top += mainPaddingSize;
-								} else {
-									padding.bottom += mainPaddingSize;
-								}
-							} else {
-								if (secondaryConfig.posX === 'left') {
-									padding.left += mainPaddingSize;
-								} else {
-									padding.right += mainPaddingSize;
-								}
-							}
-						} else {
-							if (mainConfig.posX === 'left') {
-								padding.left += mainPaddingSize;
-							} else {
-								padding.right += mainPaddingSize;
-							}
-							if (secondaryConfig.orientation === 'vertical') {
-								if (secondaryConfig.posX === 'top') {
-									padding.top += mainPaddingSize;
-								} else {
-									padding.bottom += mainPaddingSize;
-								}
-							} else {
-								if (secondaryConfig.posY === 'top') {
-									padding.top += mainPaddingSize;
-								} else {
-									padding.bottom += mainPaddingSize;
-								}
-							}
-						}
-					} else {  
-						// If we're here, then Main Overlay is true AND secondary Overlay is true
-						// So do nothing, all Padding is already set to Zero
-					}
-				}
+				padding = this.buildPaddingStyle(padding, mainConfig, mainPaddingSize);
+				padding = this.buildPaddingStyle(padding, secondaryConfig, secondaryPaddingSize);
 				break;
 			case 1:
 			default:
-				if (!mainConfig.overlay) {
-					if (mainConfig.orientation === 'horizontal') {
-						if (mainConfig.posY === 'top') {
-							padding.top += mainPaddingSize;
-						} else {
-							padding.bottom += mainPaddingSize;
-						}
-					} else {
-						if (mainConfig.posX === 'left') {
-							padding.left += mainPaddingSize;
-						} else {
-							padding.right += mainPaddingSize;
-						}
-					}
-				}
+				padding = this.buildPaddingStyle(padding, mainConfig, mainPaddingSize);
 		};
 
 		let containerStyle = {};
