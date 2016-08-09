@@ -10,6 +10,7 @@ This is a React JS Component inspired by clean gallery design.
 ###Demo Display Website
 [rag.js.org](http://rag.js.org)
 
+
 ###Sample Screencap
 ![Image of Gallery]
 (http://i.imgur.com/CHVrtc3.jpg)
