@@ -62,7 +62,7 @@ export default MyAwesomeReactComponent;
 
 ## Customization
 
-Key |  | Required |  Type | Description
+Key | - | Required |  Type | Description
 ----- | ----- | ----- |  ----- | -----
 images | | Array<String>| A 1D or a 2D Array of images. (2D) Images in Zero Index will be the secondary thumbnails
 height | | Integer/String | This will set the total height of the chart.
