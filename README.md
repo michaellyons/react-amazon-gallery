@@ -8,6 +8,17 @@
 
 ## [Github Page](https://michaellyons.github.io/react-amazon-gallery)
 
+## Sample Screencap
+![Image of Gallery]
+(http://i.imgur.com/CHVrtc3.jpg)
+
+## Current Capabilities
+1. One Dimensional Gallery View
+  * Renders a one dimensional array of image src strings.
+2. Two Dimensional Gallery View
+  * Allows for clean browsing experience of product variations and similar perspective combinations which would look terrible in a grid.
+
+
 ## Prerequisites
 
 You should be using [NodeJS](https://www.nodejs.org) and [ReactJS](https://facebook.github.io/react/)
@@ -23,6 +34,7 @@ or
 ```sh
 yarn add react-amazon-gallery
 ```
+
 
 ## Usage
 
@@ -55,14 +67,14 @@ images | | Array<String>/Array<Array<String>>| A 1D or a 2D Array of images. (2D
 height | | Integer/String | This will set the total height of the chart.
 width | | Integer/String | This will set override the width of the chart.
 main | | | object | This is the config object for the main thumbnails
-| orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
-| overlay | Boolean | If set, the image thumbnails will not be given gutter padding
-| posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned
-| posX | Enum | 'left' or 'right' will shift where the thumbnails are positioned
-| spacing | Integer | Distance between image thumbnails
-| size | Integer | Sets the size of the thumbnails
-| hlColor | String | Accepts CSS colors (Hex/Names)
-| hlSize | Integer | Sets the size of the thumbnail's highlight glow effect
+ | orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
+ | overlay | Boolean | If set, the image thumbnails will not be given gutter padding
+ | posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned
+ | posX | Enum | 'left' or 'right' will shift where the thumbnails are positioned
+ | spacing | Integer | Distance between image thumbnails
+ | size | Integer | Sets the size of the thumbnails
+ | hlColor | String | Accepts CSS colors (Hex/Names)
+ | hlSize | Integer | Sets the size of the thumbnail's highlight glow effect
 style |  | Object | Style that is passed to SVG.
 wrapStyle |  | Object | Style for wrapper div (div).
 
