@@ -1,0 +1,204 @@
+body {
+  font-family: Arial;
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+.button {
+
+}
+.flex {
+  display: flex;
+}
+.flexW {
+  display: flex;
+}
+.github-corner {
+  z-index: 9000;
+}
+.github-corner svg {
+  z-index: 9000;
+}
+.propType {
+  color: #f18fb0;
+}
+.propKey {
+  color: #8ca3d2;
+}
+.rootBkg {
+  background-size: cover;
+  background-position: center;
+}
+.glassBkg {
+  background: rgba(0,0,0,0.7);
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+.pad2 {
+  padding: 20px;
+}
+.paper {
+  background: whitesmoke;
+  padding: 20px;
+  color: black;
+  border-radius: 4px;
+}
+.fadeTitle {
+  padding: 4px 12px;
+  color: white;
+  font-size: 20px;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#333333+0,999999+99 */
+  background: #222222; /* Old browsers */
+  background: -moz-linear-gradient(left, #222222 0%, #888888 99%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #222222 0%,#888888 99%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #222222 0%,#888888 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222222', endColorstr='#888888',GradientType=1 ); /* IE6-9 */
+}
+.fadeTitleAfter {
+  position: relative;
+}
+.fadeTitleAfter:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -28px;
+  border-top: 18px solid #222222;
+  border-left: 14px solid transparent;
+  border-bottom: 18px solid transparent;
+  border-right: 14px solid #222222;
+}
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+.accordion {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.42s ease-in-out;
+}
+.accordionClosed {
+  height: 0px;
+}
+.accordionContent {
+  position: relative;
+  top: 0
+}
+.accordionClosed .accordionContent {
+  left: 0;
+  top: -100%;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.displayTable {
+  font-size: 1.2em;
+}
+.displayTable td {
+  padding: 10px;
+}
+.displayTable tbody tr:last-child {
+  border-bottom: none !important;
+}
+.bgImageContainer {
+    height: 150%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    transition-property: opacity !important;
+    transition-timing-function: ease;
+    transition-duration: .25s;
+}
+.parallax {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
+    z-index: 0;
+
+}
+.parallax-back {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    will-change: transform;
+    z-index: -1;
+}
+
+.parallax h1 {
+    background: white;
+    padding: 1.25em;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 0px 8px 0px #555;
+    border-radius: 3px;
+}
+
+.fullscreen {
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+.almostFullscreen .content-a {
+    width:100%;
+    height:95%;
+    overflow:hidden;
+}
+.fullscreen.overflow,
+.fullscreen.overflow .content-a {
+    height:auto;
+    min-height:100%;
+}
