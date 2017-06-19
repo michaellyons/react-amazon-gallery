@@ -62,20 +62,20 @@ export default MyAwesomeReactComponent;
 
 ## Customization
 
-Key | - | Required |  Type | Description
------ | ----- | ----- |  ----- | -----
+Key | - | Type |  Description
+----- | ----- | ----- |  -----
 images | | Array<String>| A 1D or a 2D Array of images. (2D) Images in Zero Index will be the secondary thumbnails
 height | | Integer/String | This will set the total height of the chart.
 width | | Integer/String | This will set override the width of the chart.
-main | | | object | This is the config object for the main thumbnails
- . | orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
- . | overlay | Boolean | If set, the image thumbnails will not be given gutter padding
- . | posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned
- . | posX | Enum | 'left' or 'right' will shift where the thumbnails are positioned
- . | spacing | Integer | Distance between image thumbnails
- . | size | Integer | Sets the size of the thumbnails
- . | hlColor | String | Accepts CSS colors (Hex/Names)
- . | hlSize | Integer | Sets the size of the thumbnail's highlight glow effect
+main | | object | This is the config object for the main thumbnails
+ - | orientation | Enum | 'vertical' or 'horizontal' will change the flow of image thumbnails
+ - | overlay | Boolean | If set, the image thumbnails will not be given gutter padding
+ - | posY | Enum | 'top' or 'bot' will shift where the thumbnails are positioned
+ - | posX | Enum | 'left' or 'right' will shift where the thumbnails are positioned
+ - | spacing | Integer | Distance between image thumbnails
+ - | size | Integer | Sets the size of the thumbnails
+ - | hlColor | String | Accepts CSS colors (Hex/Names)
+ - | hlSize | Integer | Sets the size of the thumbnail's highlight glow effect
 style |  | Object | Style that is passed to SVG.
 wrapStyle |  | Object | Style for wrapper div (div).
 
